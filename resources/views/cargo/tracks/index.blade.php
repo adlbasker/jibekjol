@@ -12,7 +12,7 @@
     <div class="col-md-5">
       <form action="/{{ $lang }}/admin/tracks/search/tracks" method="get">
         <div class="input-group input-search">
-          <input type="search" class="form-control input-xs" name="text" placeholder="Поиск...">
+          <input type="search" class="form-control input-xs" name="text" value="{{ $_GET['text'] ?? '' }}" placeholder="Поиск...">
 
           <div class="input-group-btn">
             <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>

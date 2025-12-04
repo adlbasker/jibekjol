@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Joystick;
 use Auth;
 use Hash;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -24,17 +25,24 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         $users = User::orderBy('created_at')->paginate(50);
+        $roles = Role::get();
         $regions = Region::get();
 
-        return view('joystick.users.index', compact('users', 'regions'));
+        return view('joystick.users.index', compact('users', 'roles', 'regions'));
     }
 
     public function search(Request $request)
     {
         $text = trim(strip_tags($request->text));
+        $roleId = $request->role_id ?? 0;
         $regionId = $request->region_id ?? 0;
 
         $users = User::query()
+            ->when($roleId >= 1, function($query) use ($roleId) {
+                $query->whereHas('roles', function(Builder $subQuery) use ($roleId) {
+                    $subQuery->where('role_id', $roleId);
+                });
+            })
             ->when($regionId >= 1, function($query) use ($regionId) {
                 $query->where('region_id', $regionId);
             })
@@ -43,15 +51,18 @@ class UserController extends Controller
                 $query->orWhere('lastname', 'like', $text.'%');
                 $query->orWhere('email', 'like', $text.'%');
                 $query->orWhere('tel', 'like', '%'.$text.'%');
+                $query->orWhere('id_client', 'like', '%'.$text.'%');
             })
             ->paginate(50);
 
         $users->appends([
+            'role_id' => $request->role_id,
             'region_id' => $request->region_id,
         ]);
 
+        $roles = Role::get();
         $regions = Region::get();
-        return view('joystick.users.index', compact('users', 'regions'));
+        return view('joystick.users.index', compact('users', 'roles', 'regions'));
     }
 
     public function searchAjax(Request $request)

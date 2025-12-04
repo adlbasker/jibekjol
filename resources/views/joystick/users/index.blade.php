@@ -5,20 +5,39 @@
 
   @include('components.alerts')
 
-  <div class="row">
-    <div class="col-md-5">
-      <form action="/{{ $lang }}/admin/users/search/user" method="get">
-        <div class="input-group input-search">
-          <input type="search" class="form-control input-xs typeahead-goods" name="text" placeholder="Поиск...">
-
-          <div class="input-group-btn">
+  <form action="/{{ $lang }}/admin/users/search/user" method="get">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="input-group">
+          <input type="search" class="form-control input-xs typeahead-goods" name="text" value="{{ $_GET['text'] ?? '' }}" placeholder="Поиск...">
+          <span class="input-group-btn">
             <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <?php $roleTitle = 'Роли'; ?>
+              {{  (isset($_GET['role_id'])) ? $roles->firstWhere('id', $_GET['role_id'])->description : $roleTitle }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-category">
+              <?php foreach ($roles as $role) : ?>
+                <li>
+                  <a href="#">
+                    <label><input type="radio" name="role_id" value="{{ $role->id }}"> {{ $role->description }}</label>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+          <div class="btn-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <?php $regionTitle = 'Регионы';  ?>
               {{  (isset($_GET['region_id'])) ? $regions->firstWhere('id', $_GET['region_id'])->title : $regionTitle }} <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-category">
-              <li><a href="/{{ $lang }}/admin/users"><b>Все регионы</b></a></li>
+            <ul class="dropdown-menu dropdown-menu-category">
               <?php $traverse = function ($nodes, $prefix = null) use (&$traverse, $lang) { ?>
                 <?php foreach ($nodes as $node) : ?>
                   <li>
@@ -32,10 +51,11 @@
               <?php $traverse($regions->toTree()); ?>
             </ul>
           </div>
-        </div>
-      </form><br>
+          <a href="/{{ $lang }}/admin/users" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div> 
+      </div>
     </div>
-  </div>
+  </form><br>
 
   <div class="table-responsive">
     <table class="table table-striped table-condensed">

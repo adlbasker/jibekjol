@@ -30,7 +30,8 @@ class TrackController extends Controller
                 $query->where('code', 'like', '%'.$text.'%')
                     ->orWhere('description', 'like', '%'.$text.'%');
             })
-            ->paginate(50);
+            ->paginate(50)
+            ->appends($request->query());
 
         return view('cargo.tracks.index', compact('tracks'));
     }

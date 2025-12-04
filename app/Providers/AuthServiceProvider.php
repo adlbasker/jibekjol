@@ -25,9 +25,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
-        // Joystick
+        // Joystick 
         Gate::define('allow-filemanager', function(User $user) {
             return $user->roles->first()->permissions->pluck('name')->contains('allow-filemanager');
         });
