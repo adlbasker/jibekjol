@@ -42,24 +42,27 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'tel' => ['required', 'string', 'max:15', 'unique:users'],
             'region_id' => ['required', 'integer'],
-            'address' => ['required', 'string'],
-            // 'id_client' => ['required', 'string', 'min:10', 'max:20'],
+            'id_client_mode' => ['required', 'in:auto,manual'],
+            'id_client' => ['nullable', 'required_if:id_client_mode,manual', 'string', 'min:5', 'max:20', 'unique:users,id_client'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $region = Region::find($request->region_id);
 
-        // $idClient = 'J7799'.substr($region->slug, 0, 3).substr($request->tel, -5);
-        // $idClient = Str::upper($idClient);
+        $idClient = 'J7788'.substr($region->slug, 0, 3).substr($request->tel, -5);
+        $idClient = Str::upper($idClient);
+        $finalIdClient = $request->id_client_mode === 'manual'
+            ? Str::upper($request->id_client)
+            : $idClient;
 
         $user = User::create([
             'name' => $request->name,
             'lastname' => $request->lastname,
             'email' => $request->email,
             'tel' => $request->tel,
-            'id_client' => $request->id_client,
+            'id_client' => $finalIdClient,
             'region_id' => $request->region_id,
-            'address' => $request->address,
+            // 'address' => $request->address,
             'password' => Hash::make($request->password),
         ]);
 
@@ -67,6 +70,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(app()->getLocale().RouteServiceProvider::HOME);
+        return redirect(app()->getLocale().RouteServiceProvider::HOME)
+            ->with('status', __('app.registration_success', ['name' => $user->name, 'id_client' => $finalIdClient]));
     }
 }

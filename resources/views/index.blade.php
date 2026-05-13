@@ -18,7 +18,7 @@
           <div class="display-3 shadow-1 fw-bold">{!! $promo->firstWhere('slug', 'offer')->content !!}</div>
           <hr>
           <h2 class="d-none-d-md-block fw-normal shadow-1">{{ __('app.tracking_by_code') }}</h2>
-          <form action="/{{ $lang }}/search-track" method="get" class="col-12 col-lg-8 offset-lg-2 mt-lg-0 mb-3 mb-lg-0 me-lg-2 py-2" role="search">
+          <form action="/{{ $lang }}/search-track" method="get" id="search-track-form" class="col-12 col-lg-8 offset-lg-2 mt-lg-0 mb-3 mb-lg-0 me-lg-2 py-2" role="search">
             <input type="search" name="code" class="form-control form-control-dark form-control-lg -text-bg-dark" placeholder="{{ __('app.enter_track_code') }}" aria-label="Search" min="4" required>
           </form>
         </div>
@@ -27,18 +27,74 @@
   </div>
 
   <!-- Interesting -->
-  <div class="container px-4 py-5 my-3 text-center border-bottom">
+  <div class="container px-4 py-5 my-3 text-center border-bottom" id="interesting">
 
     <!-- Login buttons -->
     <div class="col-lg-12 text-center mb-5">
+      @include('components.alerts')
+
       @guest
         <a href="/{{ $lang }}/login" class="btn btn-primary btn-lg m-2">{{ __('app.login_btn') }}</a>
         <a href="/{{ $lang }}/register" class="btn btn-warning btn-lg">{{ __('app.register_btn') }}</a>
+        <a href="{{ route('google.redirect', $lang) }}" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-google"></i> {{ __('app.google_login') }}</a>
       @else
         <a href="/{{ $lang }}/client" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-upc"></i> {{ __('app.my_tracks') }}</a>
         <a href="/{{ $lang }}/client/archive" class="btn btn-outline-dark btn-lg"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a>
       @endguest
     </div>
+
+    @auth
+      <div class="col-lg-6 offset-lg-3 p-4 p-md-5 mb-5 border rounded-3 text-start">
+        <div class="row mb-2" id="copy-paste-text">
+          <h3 class="mb-2">{{ __('app.copy_delivery_address') }}</h3>
+          <div class="col-3">
+            <div>ID:</div>
+            <div>Number:</div>
+            <div>China address:</div>
+          </div>
+          <div class="col-9 cargo-data">
+            <div>{{ Auth()->user()->id_client }}</div>
+            <div>18149991335</div>
+            <div>广东省 佛山市 南海区 里水镇 里水镇洲村大管家仓储园E113号(7788仓库)</div>
+          </div>
+        </div>
+        <button id="copy-data" class="btn btn-sm btn-outline-dark" type="button">
+          <i class="bi bi-clipboard"></i> {{ __('app.copy') }}
+        </button>
+      </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const copyBtn = document.getElementById('copy-data');
+          const textElement = document.querySelector('.cargo-data');
+
+          if (copyBtn && textElement) {
+            copyBtn.addEventListener('click', function() {
+              // Использование innerText сохраняет переносы строк, что идеально для умного распознавания адресов (Pinduoduo, Taobao и т.д.)
+              const textToCopy = textElement.innerText;
+
+              navigator.clipboard.writeText(textToCopy).then(() => {
+                // Сохраняем изначальный вид кнопки
+                const originalHtml = copyBtn.innerHTML;
+
+                // Меняем вид кнопки на успешный
+                copyBtn.innerHTML = '<i class="bi bi-check2"></i>  <?= __('app.copied'); ?>';
+                copyBtn.classList.remove('btn-outline-dark');
+                copyBtn.classList.add('btn-success');
+
+                // Возвращаем вид кнопки обратно через 2 секунды
+                setTimeout(() => {
+                  copyBtn.innerHTML = originalHtml;
+                  copyBtn.classList.remove('btn-success');
+                  copyBtn.classList.add('btn-outline-dark');
+                }, 2000);
+              }).catch(err => {
+                console.error('Failed to copy text: ', err);
+              });
+            });
+          }
+        });
+      </script>
+    @endauth
 
     <div class="col-lg-6 mx-auto mb-5">
       <h2 class=" fw-bold text-body-emphasis">{{ $promo->firstWhere('slug', 'second-offer')->content }}</h2>
@@ -137,6 +193,7 @@
       <div class="col-lg-12 text-center mb-4">
         <a href="/{{ $lang }}/login" class="btn btn-primary btn-lg m-2">{{ __('app.login_btn') }}</a>
         <a href="/{{ $lang }}/register" class="btn btn-warning btn-lg">{{ __('app.register_btn') }}</a>
+        <a href="{{ route('google.redirect', $lang) }}" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-google"></i> {{ __('app.google_login') }}</a>
       </div>
     @endunless
   </div>
@@ -230,7 +287,7 @@
   @endif
   @if (count($errors) > 0 || session('status'))
     <script>
-      document.getElementById("app-form").scrollIntoView({behavior: 'instant'});
+      document.getElementById("search-track-form").scrollIntoView({behavior: 'instant'});
     </script>
   @endif
 @endsection

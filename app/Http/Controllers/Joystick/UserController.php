@@ -37,6 +37,8 @@ class UserController extends Controller
         $roleId = $request->role_id ?? 0;
         $regionId = $request->region_id ?? 0;
 
+        dd($request->all());
+
         $users = User::query()
             ->when($roleId >= 1, function($query) use ($roleId) {
                 $query->whereHas('roles', function(Builder $subQuery) use ($roleId) {

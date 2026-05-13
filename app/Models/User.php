@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'lastname',
         'email',
+        'google_id',
         'tel',
         'id_client',
         'region_id',

@@ -35,7 +35,7 @@
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <?php $regionTitle = 'Регионы';  ?>
-              {{  (isset($_GET['region_id'])) ? $regions->firstWhere('id', $_GET['region_id'])->title : $regionTitle }} <span class="caret"></span>
+              {{ (isset($_GET['region_id'])) ? $regions->firstWhere('id', $_GET['region_id'])->title : $regionTitle }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-category">
               <?php $traverse = function ($nodes, $prefix = null) use (&$traverse, $lang) { ?>
@@ -44,7 +44,7 @@
                     <a href="#">
                       <label><input type="radio" name="region_id" value="{{ $node->id }}"> {{ PHP_EOL.$prefix.' '.$node->title }}</label>
                     </a>
-                  </li>
+                  </li>`
                   <?php $traverse($node->children, $prefix.'___'); ?>
                 <?php endforeach; ?>
               <?php }; ?>

@@ -53,6 +53,10 @@ return [
     'select_a_city' => 'Select a city...',
     'region' => 'Region',
     'address' => 'Address',
+    'id_client' => 'Client ID',
+    'id_client_creation_mode' => 'Client ID creation mode',
+    'id_client_auto' => 'Create automatically',
+    'id_client_manual' => 'Enter manually',
     'confirm_action' => 'Confirm the action?',
     'subscribe_webpush' => 'Subscribe to notification',
     'unsubscribe_webpush' => 'Unsubscribe from notification',
@@ -66,6 +70,8 @@ return [
     'enter_password' => 'Enter password',
     'confirm_password' => 'Confirm password',
     'register' => 'Register',
+    'google_login' => 'Login with Google',
+    'google_register' => 'Register with Google',
 
     'changing_password' => 'Changing password',
     'new_password' => 'New Password',
@@ -75,6 +81,7 @@ return [
     'no-trackcode' => 'No track code in my account',
     'data_not_match' => 'Data does not match',
     'track_not_match' => 'Track code does not match',
+    'registration_success' => 'Registration successful, thank you! Your personal ID: :id_client',
 
     // Client
     'my_account' => 'My account',
@@ -93,6 +100,9 @@ return [
     'change_password' => 'Change password',
     'old_password' => 'Old Password',
     'back' => 'Back',
+    'copy_delivery_address' => 'Copy warehouse address',
+    'copy' => 'Copy',
+    'copied' => 'Copied',
 
     'statuses' => [
         'all' => 'All',

@@ -5,13 +5,30 @@
 
       @include('components.alerts')
 
-      <div class="p-4 p-md-5 bg-light border rounded-3 bg-light">
+      <div class="p-4 p-md-5 mb-4 bg-light border rounded-3">
+        <div class="row mb-2" id="copy-paste-text">
+          <h5 class="mb-2">{{ __('app.copy_delivery_address') }}</h5>
+          <div class="col-3">
+            <div>ID:</div>
+            <div>Number:</div>
+            <div>China address:</div>
+          </div>
+          <div class="col-9 cargo-data">
+            <div>{{ Auth()->user()->id_client }}</div>
+            <div>18149991335</div>
+            <div>广东省 佛山市 南海区 里水镇 里水镇洲村大管家仓储园E113号(7788仓库)</div>
+          </div>
+        </div>
+        <button id="copy-data" class="btn btn-sm btn-outline-dark" type="button">
+          <i class="bi bi-clipboard"></i> {{ __('app.copy') }}
+        </button>
+      </div>
+
+      <div class="p-4 p-md-5 bg-light border rounded-3">
         <h2 class="fw-bold mb-0">{{ __('app.my_profile') }}</h2>
         <br>
 
-        <h5>{{ $user->name.' '.$user->lastname }}</h5>
-        <p>{{ $user->email }}</p>
-        <p></p>
+        <h5 class="mb-2">{{ $user->name.' '.$user->lastname }} <small>{{ $user->email }}</small></h5>
 
         <table class="table">
           <tbody>
@@ -54,6 +71,7 @@
         <a href="/{{ $lang }}/profile/edit" class="btn btn-primary btn-lg">{{ __('app.edit') }}</a>
 
       </div>
+
     </div>
   </div>
 
@@ -63,22 +81,55 @@
 
   @section('scripts')
     <script src="/webpush.js"></script>
-      <script type="text/javascript">
-        const btnSub = document.getElementById('btn-push-subscribe');
-        const btnUnsub = document.getElementById('btn-push-unsubscribe');
+    <script type="text/javascript">
+      const btnSub = document.getElementById('btn-push-subscribe');
+      const btnUnsub = document.getElementById('btn-push-unsubscribe');
 
-        btnSub.addEventListener('click', function(res) {
-          subscribeUserToPush();
-          btnSub.disabled = true;
-          btnUnsub.disabled = false;
-        });
+      btnSub.addEventListener('click', function(res) {
+        subscribeUserToPush();
+        btnSub.disabled = true;
+        btnUnsub.disabled = false;
+      });
 
-        btnUnsub.addEventListener('click', function(res) {
-          unsubscribeUserFromPush();
-          btnSub.disabled = false;
-          btnUnsub.disabled = true;
-        });
-      </script>
+      btnUnsub.addEventListener('click', function(res) {
+        unsubscribeUserFromPush();
+        btnSub.disabled = false;
+        btnUnsub.disabled = true;
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const copyBtn = document.getElementById('copy-data');
+        const textElement = document.querySelector('.cargo-data');
+
+        if (copyBtn && textElement) {
+          copyBtn.addEventListener('click', function() {
+            // Использование innerText сохраняет переносы строк, что идеально для умного распознавания адресов (Pinduoduo, Taobao и т.д.)
+            const textToCopy = textElement.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+              // Сохраняем изначальный вид кнопки
+              const originalHtml = copyBtn.innerHTML;
+
+              // Меняем вид кнопки на успешный
+              copyBtn.innerHTML = '<i class="bi bi-check2"></i>  <?= __('app.copied'); ?>';
+              copyBtn.classList.remove('btn-outline-dark');
+              copyBtn.classList.add('btn-success');
+
+              // Возвращаем вид кнопки обратно через 2 секунды
+              setTimeout(() => {
+                copyBtn.innerHTML = originalHtml;
+                copyBtn.classList.remove('btn-success');
+                copyBtn.classList.add('btn-outline-dark');
+              }, 2000);
+            }).catch(err => {
+              console.error('Failed to copy text: ', err);
+            });
+          });
+        }
+      });
+    </script>
   @endsection
 
 </x-app-layout>

@@ -50,6 +50,10 @@ return [
     'select_a_city' => 'Қаланы таңдаңыз...',
     'region' => 'Регион',
     'address' => 'Адресіңіз',
+    'id_client' => 'Клиент ID-і',
+    'id_client_creation_mode' => 'Клиент ID-ін жасау тәсілі',
+    'id_client_auto' => 'Автоматты түрде жасау',
+    'id_client_manual' => 'Қолмен енгізу',
     'confirm_action' => 'Әрекетті растайсыз ба?',
     'subscribe_webpush' => 'Хабарландыруды қосу',
     'unsubscribe_webpush' => 'Хабарландыруды тоқтату',
@@ -63,6 +67,8 @@ return [
     'enter_password' => 'Құпия сөзді еңгізіңіз',
     'confirm_password' => 'Қайта құпия сөзді еңгізіңіз',
     'register' => 'Тіркелу',
+    'google_login' => 'Google арқылы кіру',
+    'google_register' => 'Google арқылы тіркелу',
 
     'changing_password' => 'Құпия сөзді өзгертілуі',
     'new_password' => 'Жаңа құпия сөз',
@@ -72,6 +78,7 @@ return [
     'no-trackcode' => 'Менің аккаунтымда трек-код жоқ',
     'data_not_match' => 'Деректер сәйкес келмейді',
     'track_not_match' => 'Трек коды сәйкес келмейді',
+    'registration_success' => 'Тіркелу сәтті орындалды, Рахмет! Сіздің жеке ID-іңіз: :id_client',
 
     // Client
     'my_account' => 'Менің аккаунтым',
@@ -90,6 +97,9 @@ return [
     'change_password' => 'Құпия сөзді өзгерту',
     'old_password' => 'Ескі құпия сөзді енгізіңіз',
     'back' => 'Артқа',
+    'copy_delivery_address' => 'Қойма адресін көшіріңіз',
+    'copy' => 'Көшіру',
+    'copied' => 'Көшірілді',
 
     'statuses' => [
         'all' => 'Бәрі',

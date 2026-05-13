@@ -32,6 +32,9 @@
           </label>
         </div>
         <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">{{ __('app.login_btn') }}</button>
+        <a href="{{ route('google.redirect', $lang) }}" class="w-100 mb-2 btn btn-lg rounded-3 btn-outline-primary">
+          <i class="bi bi-google"></i> {{ __('app.google_login') }}
+        </a>
         @if (Route::has('password.request'))
           <a href="/{{ $lang }}/verify-user" class="w-100 mb-2 btn btn-lg btn-link">{{ __('app.forgot_password?') }}</a>
         @endif

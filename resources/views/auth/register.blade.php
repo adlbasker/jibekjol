@@ -47,13 +47,22 @@
           </select>
           <label for="region_id">{{ __('app.region') }}</label>
         </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control rounded-3" name="address" id="address" placeholder="{{ __('app.address') }}" value="{{ old('address') }}" required>
-          <label for="address">{{ __('app.address') }}</label>
+
+        <div class="mb-3">
+          <label class="form-label d-block">{{ __('app.id_client_creation_mode') }}:</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="id_client_mode" id="id_client_mode_auto" value="auto" {{ old('id_client_mode', 'auto') === 'auto' ? 'checked' : '' }}>
+            <label class="form-check-label" for="id_client_mode_auto">{{ __('app.id_client_auto') }}</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="id_client_mode" id="id_client_mode_manual" value="manual" {{ old('id_client_mode') === 'manual' ? 'checked' : '' }}>
+            <label class="form-check-label" for="id_client_mode_manual">{{ __('app.id_client_manual') }}</label>
+          </div>
         </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control rounded-3" name="id_client" id="id_client" value="{{ old('id_client') }}" placeholder="ID account: J7799...">
-          <label for="id_client">ID account</label>
+
+        <div class="form-floating mb-3" id="id_client_wrapper">
+          <input type="text" class="form-control rounded-3" name="id_client" id="id_client" value="{{ old('id_client') }}" placeholder="ID account: J7788...">
+          <label for="id_client">{{ __('app.id_client') }}</label>
         </div>
         <div class="form-floating mb-3">
           <input type="password" class="form-control rounded-3" name="password" id="password" placeholder="{{ __('app.enter_password') }}" required>
@@ -64,10 +73,39 @@
           <label for="password_confirmation">{{ __('app.re-enter_password') }}</label>
         </div>
 
-        <button type="submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary">{{ __('app.register_btn') }}</button>
+        <button type="submit" class="w-100 mb-4 btn btn-lg rounded-3 btn-primary">{{ __('app.register_btn') }}</button>
+        <a href="{{ route('google.redirect', $lang) }}" class="w-100 mb-2 btn btn-lg rounded-3 btn-outline-primary"><i class="bi bi-google"></i> {{ __('app.google_register') }}</a>
         <!-- <hr class="my-4"> -->
         <!-- <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small> -->
       </form>
     </div>
   </div>
+
+  <script>
+    (() => {
+      const idClientField = document.getElementById('id_client');
+      const idClientWrapper = document.getElementById('id_client_wrapper');
+      const modeAuto = document.getElementById('id_client_mode_auto');
+      const modeManual = document.getElementById('id_client_mode_manual');
+
+      if (!idClientField || !idClientWrapper || !modeAuto || !modeManual) {
+        return;
+      }
+
+      const toggleIdClientField = () => {
+        const isManual = modeManual.checked;
+        idClientWrapper.classList.toggle('d-none', !isManual);
+        idClientField.disabled = !isManual;
+        idClientField.required = isManual;
+
+        if (!isManual) {
+          idClientField.value = '';
+        }
+      };
+
+      modeAuto.addEventListener('change', toggleIdClientField);
+      modeManual.addEventListener('change', toggleIdClientField);
+      toggleIdClientField();
+    })();
+  </script>
 </x-app-layout>

@@ -113,6 +113,29 @@
             </li>
           </ul>
         </div>
+
+        <div class="mt-3 card bg-transparent d-lg-none">
+          <div class="card-body">
+            <h5 class="card-title">{{ __('app.copy_delivery_address') }}</h5>
+            <div class="card-text" id="copy-paste-text">
+              <div class="row">
+                <div class="col-3">
+                  <div>ID:</div>
+                  <div>Number:</div>
+                  <div>Address:</div>
+                </div>
+                <div class="col-9 cargo-data">
+                  <div>{{ Auth()->user()->id_client }}</div>
+                  <div>18149991335</div>
+                  <div>广东省 佛山市 南海区 里水镇 里水镇洲村大管家仓储园E113号(7788仓库)</div>
+                </div>
+              </div>
+            </div>
+            <button id="copy-data" class="btn btn-sm btn-outline-info" type="button">
+              <i class="bi bi-clipboard"></i> Copy
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -125,14 +148,42 @@
 
   @livewireScripts
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-  </script>
   <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="/js/offcanvas.js"></script>
 
   @yield('scripts')
 
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const copyBtn = document.getElementById('copy-data');
+        const textElement = document.querySelector('.cargo-data');
+
+        if (copyBtn && textElement) {
+          copyBtn.addEventListener('click', function() {
+            // Использование innerText сохраняет переносы строк, что идеально для умного распознавания адресов (Pinduoduo, Taobao и т.д.)
+            const textToCopy = textElement.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+              // Сохраняем изначальный вид кнопки
+              const originalHtml = copyBtn.innerHTML;
+
+              // Меняем вид кнопки на успешный
+              copyBtn.innerHTML = '<i class="bi bi-check2"></i>  <?= __('app.copied'); ?>';
+              copyBtn.classList.remove('btn-outline-info');
+              copyBtn.classList.add('btn-success');
+
+              // Возвращаем вид кнопки обратно через 2 секунды
+              setTimeout(() => {
+                copyBtn.innerHTML = originalHtml;
+                copyBtn.classList.remove('btn-success');
+                copyBtn.classList.add('btn-outline-info');
+              }, 2000);
+            }).catch(err => {
+              console.error('Failed to copy text: ', err);
+            });
+          });
+        }
+      });
+  </script>
 </body>
 </html>

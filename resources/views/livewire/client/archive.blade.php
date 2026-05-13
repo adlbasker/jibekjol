@@ -38,6 +38,8 @@
             'received' => null,
             'sent' => null,
             'sorted' => null,
+            'on-the-border' => null,
+            'on-route' => null,
             'waiting' => null,
             'arrived' => null,
             'sent-locally' => null,

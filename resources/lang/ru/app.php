@@ -53,6 +53,10 @@ return [
     'select_a_city' => 'Выберите город...',
     'region' => 'Регион',
     'address' => 'Адрес',
+    'id_client' => 'ID клиента',
+    'id_client_creation_mode' => 'Способ создания ID клиента',
+    'id_client_auto' => 'Создать автоматически',
+    'id_client_manual' => 'Ввести вручную',
     'confirm_action' => 'Подтверждаете действие?',
     'subscribe_webpush' => 'Подписаться на уведомление',
     'unsubscribe_webpush' => 'Отписаться от уведомления',
@@ -66,6 +70,8 @@ return [
     'enter_password' => 'Введите пароль',
     'confirm_password' => 'Повторно введите пароль',
     'register' => 'Зарегистрироваться',
+    'google_login' => 'Войти через Google',
+    'google_register' => 'Регистрация через Google',
 
     'changing_password' => 'Изменение пароля',
     'new_password' => 'Новый пароль',
@@ -75,6 +81,7 @@ return [
     'no-trackcode' => 'В моем аккаунте нет трек-кодов',
     'data_not_match' => 'Данные не совпадают',
     'track_not_match' => 'Трек код не совпадает',
+    'registration_success' => 'Регистрация прошла успешно, Рахмет! Ваш личный ID: :id_client',
 
     // Client
     'my_account' => 'Мой аккаунт',
@@ -93,6 +100,9 @@ return [
     'change_password' => 'Изменить пароль',
     'old_password' => 'Старый пароль', 
     'back' => 'Назад',
+    'copy_delivery_address' => 'Скопируйте адрес склада',
+    'copy' => 'Скопировать',
+    'copied' => 'Скопировано',
 
     'statuses' => [
         'all' => 'Все',
