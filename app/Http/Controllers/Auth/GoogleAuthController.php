@@ -74,7 +74,7 @@ class GoogleAuthController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended($request->route('locale').'/profile/edit')
+        return redirect()->intended($request->route('locale').'/profile/register')
             ->with([
                 'status' => __('app.fill_data'),
             ]);
