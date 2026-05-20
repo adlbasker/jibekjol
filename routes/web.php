@@ -126,6 +126,8 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'auth'], function() {
     Route::get('profile', [ProfileController::class, 'profile']);
     Route::get('profile/edit', [ProfileController::class, 'editProfile']);
     Route::put('profile', [ProfileController::class, 'updateProfile']);
+    Route::get('profile/register', [ProfileController::class, 'registerProfile']);
+    Route::put('profile/store', [ProfileController::class, 'storeProfile']);
     Route::get('profile/password/edit', [ProfileController::class, 'passwordEdit']);
     Route::put('profile/password', [ProfileController::class, 'passwordUpdate']);
     Route::post('push-subscribe', [ProfileController::class, 'pushSubscribe']);

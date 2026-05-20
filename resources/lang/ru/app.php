@@ -82,6 +82,10 @@ return [
     'data_not_match' => 'Данные не совпадают',
     'track_not_match' => 'Трек код не совпадает',
     'registration_success' => 'Регистрация прошла успешно, Рахмет! Ваш личный ID: :id_client',
+    'fill_form' => 'Заполните анкету',
+    'data_added' => 'Данные добавлены',
+    'data_updated' => 'Данные обновлены',
+    'data_deleted' => 'Данные удалены',
 
     // Client
     'my_account' => 'Мой аккаунт',

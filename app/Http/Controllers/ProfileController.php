@@ -70,7 +70,50 @@ class ProfileController extends Controller
         // $user->profile->sex = $request->sex;
         // $user->profile->save();
 
-        return redirect(app()->getLocale().'/profile')->with('status', 'Запись обновлена!');
+        return redirect(app()->getLocale().'/profile')->with('status', __('app.data_updated'));
+    }
+
+    public function registerProfile()
+    {
+        $user = Auth::user();
+        $regions = Region::orderBy('sort_id')->get()->toTree();
+        $languages = Language::orderBy('sort_id')->get();
+
+        if ($user->id_client == true) {
+            return redirect(app()->getLocale().'/profile')->with('status', __('app.data_added'));
+        }
+
+        // $date = [];
+        // list($date['year'], $date['month'], $date['day']) = explode('-', $user->profile->birthday);
+
+        return view('account.profile-register', compact('user', 'regions', 'languages'));
+    }
+
+    public function storeProfile(Request $request)
+    {
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'tel' => ['required', 'string', 'max:15'],
+            'region_id' => ['required', 'integer'],
+        ]);
+
+        $user = Auth::user();
+
+        $region = Region::find($request->region_id);
+
+        $idClient = 'J7788'.substr($region->slug, 0, 3).substr($request->tel, -5);
+        $idClient = Str::upper($idClient);
+
+        $user->name = $request->name;
+        $user->lastname = $request->lastname;
+        $user->tel = $request->tel;
+        $user->id_client = $idClient;
+        $user->region_id = $request->region_id;
+        $user->lang = $request->lang;
+        $user->save();
+
+        return redirect(app()->getLocale().'/profile')->with('status', __('app.data_added'));
     }
 
     public function pushSubscribe(Request $request)
@@ -127,6 +170,6 @@ class ProfileController extends Controller
         $user->setRememberToken(Str::random(60));
         $user->save();
 
-        return redirect(app()->getLocale().'/profile')->with('status', 'Запись обновлена!');
+        return redirect(app()->getLocale().'/profile')->with('status', __('app.data_updated'));
     }
 }

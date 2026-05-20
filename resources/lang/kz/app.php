@@ -79,6 +79,10 @@ return [
     'data_not_match' => 'Деректер сәйкес келмейді',
     'track_not_match' => 'Трек коды сәйкес келмейді',
     'registration_success' => 'Тіркелу сәтті орындалды, Рахмет! Сіздің жеке ID-іңіз: :id_client',
+    'fill_form' => 'Форманы толтырыңыз',
+    'data_added' => 'Деректер қосылды',
+    'data_updated' => 'Деректер жаңартылды',
+    'data_deleted' => 'Деректер өшірілді',
 
     // Client
     'my_account' => 'Менің аккаунтым',

@@ -82,6 +82,10 @@ return [
     'data_not_match' => 'Data does not match',
     'track_not_match' => 'Track code does not match',
     'registration_success' => 'Registration successful, thank you! Your personal ID: :id_client',
+    'fill_form' => 'Fill out the form',
+    'data_added' => 'Data added',
+    'data_updated' => 'Data updated',
+    'data_deleted' => 'Data deleted',
 
     // Client
     'my_account' => 'My account',

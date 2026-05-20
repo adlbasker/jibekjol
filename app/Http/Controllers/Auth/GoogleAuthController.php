@@ -16,6 +16,12 @@ class GoogleAuthController extends Controller
     public function redirectToGoogle(Request $request)
     {
         return Socialite::driver('google')
+            // ->setScopes([
+            //     'openid',
+            //     'profile',
+            //     'email',
+            //     'https://www.googleapis.com/auth/user.phonenumbers.read' // Scope для телефона
+            // ])
             ->redirectUrl($this->redirectUrlForLocale($request->route('locale')))
             ->redirect();
     }
@@ -27,6 +33,12 @@ class GoogleAuthController extends Controller
             ->stateless()
             ->user();
 
+        // $rawFields = $googleUser->getRaw();
+
+        // if (!empty($rawFields['phoneNumbers'])) {
+        //     $phone = $rawFields['phoneNumbers'][0]['value'] ?? null;
+        // }
+
         $user = User::where('google_id', $googleUser->id)
             ->orWhere('email', $googleUser->email)
             ->first();
@@ -36,21 +48,21 @@ class GoogleAuthController extends Controller
             $firstName = $nameParts[0] ?? 'Google';
             $lastName = $nameParts[1] ?? 'User';
 
-            $region = Region::orderBy('id')->first();
-            $regionId = $region->id ?? 0;
-            $regionSlug = Str::upper(substr((string) ($region->slug ?? 'QAZ'), 0, 3));
-            $tel = 'G'.substr(preg_replace('/\D/', '', (string) $googleUser->id), -14);
-            $tel = str_pad($tel, 15, '0', STR_PAD_RIGHT);
-            $idClient = 'J7788'.$regionSlug.substr($tel, -5);
+            // $region = Region::orderBy('id')->first();
+            // $regionId = $region->id ?? 0;
+            // $regionSlug = Str::upper(substr((string) ($region->slug ?? 'QAZ'), 0, 3));
+            // $tel = 'G'.substr(preg_replace('/\D/', '', (string) $googleUser->id), -14);
+            // $tel = str_pad($tel, 15, '0', STR_PAD_RIGHT);
+            // $idClient = 'J7788'.$regionSlug.substr($tel, -5);
 
             $user = User::create([
                 'name' => $firstName,
                 'lastname' => $lastName,
                 'email' => $googleUser->email,
                 'google_id' => $googleUser->id,
-                'tel' => $tel,
-                'id_client' => Str::upper($idClient),
-                'region_id' => $regionId,
+                'tel' => '',
+                'id_client' => '',
+                'region_id' => '',
                 'address' => '',
                 'password' => Hash::make(Str::random(40)),
             ]);
@@ -62,7 +74,10 @@ class GoogleAuthController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended($request->route('locale').'/client');
+        return redirect()->intended($request->route('locale').'/profile/edit')
+            ->with([
+                'status' => __('app.fill_data'),
+            ]);
     }
 
     private function redirectUrlForLocale(string $locale): string
