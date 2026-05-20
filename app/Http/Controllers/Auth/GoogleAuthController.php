@@ -60,10 +60,10 @@ class GoogleAuthController extends Controller
                 'lastname' => $lastName,
                 'email' => $googleUser->email,
                 'google_id' => $googleUser->id,
-                'tel' => '',
-                'id_client' => '',
-                'region_id' => '',
-                'address' => '',
+                // 'tel' => '',
+                // 'id_client' => '',
+                // 'region_id' => '',
+                // 'address' => '',
                 'password' => Hash::make(Str::random(40)),
             ]);
         } elseif (empty($user->google_id)) {
