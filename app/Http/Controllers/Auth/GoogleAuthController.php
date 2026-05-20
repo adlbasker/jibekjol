@@ -74,10 +74,8 @@ class GoogleAuthController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended($request->route('locale').'/profile/register')
-            ->with([
-                'status' => __('app.fill_data'),
-            ]);
+        return redirect()->intended(app()->getLocale().'/profile/register')
+            ->with('status', __('app.fill_form'));
     }
 
     private function redirectUrlForLocale(string $locale): string
