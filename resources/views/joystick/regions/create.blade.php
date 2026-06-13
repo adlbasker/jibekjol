@@ -5,64 +5,67 @@
 
   @include('components.alerts')
 
-  <p class="text-right">
-    <a href="/{{ $lang }}/admin/regions" class="btn btn-primary"><i class="material-icons md-18">arrow_back</i></a>
-  </p>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <form action="{{ route('regions.store', $lang) }}" method="post">
-        {!! csrf_field() !!}
-        <div class="form-group">
-          <label for="title">Название</label>
-          <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ (old('title')) ? old('title') : '' }}" required>
+  <div class="row mb-3">
+    <div class="col-md-12 text-end">
+      <a href="/{{ $lang }}/admin/regions" class="btn btn-primary"><i class="material-icons">arrow_back</i></a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card mb-3">
+        <div class="card-body">
+          <form action="{{ route('regions.store', $lang) }}" method="post">
+            @csrf
+            <div class="mb-3">
+              <label for="title" class="form-label">Название</label>
+              <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ old('title') }}" required>
+            </div>
+            <div class="mb-3">
+              <label for="slug" class="form-label">Slug</label>
+              <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ old('slug') }}">
+            </div>
+            <div class="mb-3">
+              <label for="region_id" class="form-label">Регионы</label>
+              <select id="region_id" name="region_id" class="form-select">
+                <option value=""></option>
+                <?php $traverse = function ($nodes, $prefix = null) use (&$traverse) { ?>
+                  <?php foreach ($nodes as $node) : ?>
+                    <option value="{{ $node->id }}">{{ $prefix.' '.$node->title }}</option>
+                    <?php $traverse($node->children, $prefix.'___'); ?>
+                  <?php endforeach; ?>
+                <?php }; ?>
+                <?php $traverse($regions); ?>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="sort_id" class="form-label">Номер</label>
+              <input type="text" class="form-control" id="sort_id" name="sort_id" maxlength="5" value="{{ old('sort_id') }}">
+            </div>
+            <div class="mb-3">
+              <label for="data" class="form-label">Группа</label>
+              <input type="text" class="form-control" id="data" name="data" value="{{ old('data') }}">
+            </div>
+            <div class="mb-3">
+              <label for="lang" class="form-label">Язык</label>
+              <select id="lang" name="lang" class="form-select" required>
+                @foreach($languages as $language)
+                  <option value="{{ $language->slug }}" @if (old('lang') == $language->slug) selected @endif>{{ $language->title }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="status" name="status" checked>
+                <label class="form-check-label" for="status">Активен</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-success"><i class="material-icons">save</i></button>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="slug">Slug</label>
-          <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ (old('slug')) ? old('slug') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="region_id">Регионы</label>
-          <select id="region_id" name="region_id" class="form-control">
-            <option value=""></option>
-            <?php $traverse = function ($nodes, $prefix = null) use (&$traverse) { ?>
-              <?php foreach ($nodes as $node) : ?>
-                <option value="{{ $node->id }}">{{ PHP_EOL.$prefix.' '.$node->title }}</option>
-                <?php $traverse($node->children, $prefix.'___'); ?>
-              <?php endforeach; ?>
-            <?php }; ?>
-            <?php $traverse($regions); ?>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="sort_id">Номер</label>
-          <input type="text" class="form-control" id="sort_id" name="sort_id" maxlength="5" value="{{ (old('sort_id')) ? old('sort_id') : NULL }}">
-        </div>
-        <div class="form-group">
-          <label for="data">Группа</label>
-          <input type="text" class="form-control" id="data" name="data" value="{{ (old('data')) ? old('data') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="lang">Язык</label>
-          <select id="lang" name="lang" class="form-control" required>
-            @foreach($languages as $language)
-              @if (old('lang') == $language->slug)
-                <option value="{{ $language->slug }}" selected>{{ $language->title }}</option>
-              @else
-                <option value="{{ $language->slug }}">{{ $language->title }}</option>
-              @endif
-            @endforeach
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="status">Статус:</label>
-          <label>
-            <input type="checkbox" id="status" name="status" checked> Активен
-          </label>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-success"><i class="material-icons">save</i></button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 @endsection

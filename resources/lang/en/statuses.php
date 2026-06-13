@@ -2,6 +2,10 @@
 
 return [
 
+    'entry_added' => 'Entry added',
+    'entry_changed' => 'Entry changed',
+    'entry_deleted' => 'Entry deleted',
+
 	'classes' => [
 	    'added' => [
 	      	'card-color' => 'bg-added',

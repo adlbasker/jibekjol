@@ -25,7 +25,7 @@ class PermissionController extends Controller
         return view('joystick.permissions.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $lang)
     {
         $this->authorize('create', Permission::class);
 
@@ -39,7 +39,7 @@ class PermissionController extends Controller
         $permission->description = $request->description;
         $permission->save();
 
-        return redirect($request->lang.'/admin/permissions')->with('status', 'Запись добавлена!');
+        return redirect($lang.'/admin/permissions')->with('status', __('statuses.entry_added'));
     }
 
     public function edit($lang, $id)
@@ -66,7 +66,7 @@ class PermissionController extends Controller
         $permission->description = $request->description;
         $permission->save();
 
-        return redirect($lang.'/admin/permissions')->with('status', 'Запись обновлена!');
+        return redirect($lang.'/admin/permissions')->with('status', __('statuses.entry_changed'));
     }
 
     public function destroy($lang, $id)
@@ -77,6 +77,6 @@ class PermissionController extends Controller
 
         $permission->delete();
 
-        return redirect($lang.'/admin/permissions')->with('status', 'Запись удалена!');
+        return redirect($lang.'/admin/permissions')->with('status', __('statuses.entry_deleted'));
     }
 }

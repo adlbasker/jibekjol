@@ -5,47 +5,49 @@
 
   @include('components.alerts')
 
-  <p class="text-right">
-    <a href="/{{ $lang }}/admin/users" class="btn btn-primary"><i class="material-icons md-18">arrow_back</i></a>
-  </p>
+  <div class="row mb-3">
+    <div class="col-md-12 text-end">
+      <a href="/{{ $lang }}/admin/users" class="btn btn-primary"><i class="material-icons">arrow_back</i></a>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">Основная информация</div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header">Основная информация</div>
+        <div class="card-body">
           <form method="POST" action="/{{ $lang }}/admin/users/password/{{ $user->id }}">
-            <input type="hidden" name="_method" value="PUT">
+            @method('PUT')
             @csrf
 
-            <div class="form-group">
-              <label for="email">{{ __('E-Mail') }}:</label>
-              <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
+            <div class="mb-3">
+              <label for="email" class="form-label">{{ __('E-Mail') }}</label>
+              <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autofocus>
 
-              @if ($errors->has('email'))
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $errors->first('email') }}</strong>
-                </span>
-              @endif
+              @error('email')
+                <div class="invalid-feedback">
+                  {{ $message }}
+                </div>
+              @enderror
             </div>
 
-            <div class="form-group">
-              <label for="password">{{ __('Password') }}:</label>
-              <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+            <div class="mb-3">
+              <label for="password" class="form-label">{{ __('Password') }}</label>
+              <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
 
-              @if ($errors->has('password'))
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $errors->first('password') }}</strong>
-                </span>
-              @endif
+              @error('password')
+                <div class="invalid-feedback">
+                  {{ $message }}
+                </div>
+              @enderror
             </div>
 
-            <div class="form-group">
-              <label for="password-confirm">{{ __('Confirm Password') }}:</label>
+            <div class="mb-3">
+              <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
               <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
                 <button type="submit" class="btn btn-primary">{{ __('Reset Password') }}</button>
             </div>
           </form>
@@ -53,5 +55,4 @@
       </div>
     </div>
   </div>
-
 @endsection

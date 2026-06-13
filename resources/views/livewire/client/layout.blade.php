@@ -8,8 +8,6 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Jibekjol</title>
 
-  <link rel="canonical" href="">
-
   <!-- Bootstrap core CSS -->
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
 
@@ -64,7 +62,7 @@
         <img src="/img/jj-logo-white.png">
       </a>
 
-      <div class="dropdown me-auto">
+      <div class="dropdown me-sm-3 me-auto">
         <button class="btn btn-outline-light dropdown-toggle text-uppercase" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           {{ $lang }}
         </button>
@@ -85,36 +83,30 @@
             <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}"><i class="bi bi-house-fill text-white"></i></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="/{{ $lang }}/profile"><i class="bi bi-person-circle"></i> {{ __('app.my_account') }}</a>
+            <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/market"><i class="bi bi-shop-window text-white"></i> Market</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> {{ __('app.my_tracks') }}</a>
+            <a class="nav-link px-3" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> {{ __('Tracking') }}</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link px-3" href="/{{ $lang }}/client/archive"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link px-3 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person"></i> {{ __('app.my_account') }}
+            </a>
+            <ul class="dropdown-menu">
+              <!-- <li><hr class="dropdown-divider"></li> -->
+              <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile"><i class="bi bi-person"></i> {{ __('app.my_profile') }}</a></li>
+              <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile/orders"><i class="bi bi-bag-check"></i> {{ __('app.my_orders') }}</a></li>
+              <li><a class="dropdown-item py-2" href="/{{ $lang }}/client/archive"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a></li>
+            </ul>
           </li>
         </ul>
 
-        <div class="flex-shrink-0 dropdown ms-md-auto ps-3">
-          <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle fs-4 text-white"></i>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end text-small shadow">
-            <div class="text-muted px-3 py-1">{{ Auth::user()->name . ' ' . Auth::user()->lastname }}</div>
-            <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile"><i class="bi bi-person-circle"></i> {{ __('app.my_account') }}</a></li>
-            <li><a class="dropdown-item py-2" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> {{ __('app.my_tracks') }}</a></li>
-            <li><a class="dropdown-item py-2" href="/{{ $lang }}/client/archive"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <form method="POST" action="/{{ $lang }}/logout">
-                @csrf
-                <a class="dropdown-item py-2" href="#" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('app.logout_btn') }}</a>
-              </form>
-            </li>
-          </ul>
-        </div>
+        <form method="POST" action="/{{ $lang }}/logout" class="btn btn-outline-light ms-md-auto ms-3 mt-1">
+          @csrf
+          <a class="dropdown-item" href="#" onclick="event.preventDefault(); this.closest('form').submit();"><i class="bi bi-box-arrow-right"></i> {{ __('app.logout_btn') }}</a>
+        </form>
 
-        <div class="mt-3 card bg-transparent d-lg-none">
+        <!-- <div class="mt-3 card bg-transparent d-lg-none">
           <div class="card-body">
             <h5 class="card-title">{{ __('app.copy_delivery_address') }}</h5>
             <div class="card-text" id="copy-paste-text">
@@ -135,7 +127,7 @@
               <i class="bi bi-clipboard"></i> Copy
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>

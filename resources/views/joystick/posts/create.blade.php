@@ -5,112 +5,119 @@
 
   @include('components.alerts')
 
-  <p class="text-right">
-    <a href="/{{ $lang }}/admin/posts" class="btn btn-primary"><i class="material-icons md-18">arrow_back</i></a>
-  </p>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <form action="{{ route('posts.store', $lang) }}" method="post" enctype="multipart/form-data">
-        {!! csrf_field() !!}
-        <div class="form-group">
-          <label for="title">Название</label>
-          <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ (old('title')) ? old('title') : '' }}" required>
-        </div>
-        <div class="form-group">
-          <label for="slug">URI</label>
-          <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ (old('slug')) ? old('slug') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="page_id">Категории</label>
-          <select id="page_id" name="page_id" class="form-control">
-            <option value=""></option>
-            <?php $traverse = function ($nodes, $prefix = null) use (&$traverse) { ?>
-              <?php foreach ($nodes as $node) : ?>
-                <option value="{{ $node->id }}">{{ PHP_EOL.$prefix.' '.$node->title }}</option>
-                <?php $traverse($node->children, $prefix.'___'); ?>
-              <?php endforeach; ?>
-            <?php }; ?>
-            <?php $traverse($pages); ?>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="headline">Заголовок</label>
-          <input type="text" class="form-control" id="headline" name="headline" minlength="2" maxlength="500" value="{{ (old('headline')) ? old('headline') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="video">Код видео</label>
-          <input type="text" class="form-control" id="video" name="video" minlength="2" maxlength="500" value="{{ (old('video')) ? old('video') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="sort_id">Номер</label>
-          <input type="text" class="form-control" id="sort_id" name="sort_id" maxlength="5" value="{{ (old('sort_id')) ? old('sort_id') : NULL }}">
-        </div>
-        <div class="form-group">
-          <label for="image">Картинка</label><br>
-          <div class="fileinput fileinput-new" data-provides="fileinput">
-            <div class="fileinput-preview thumbnail" style="width:100%;height:auto;" data-trigger="fileinput"></div>
-            <div>
-              <span class="btn btn-default btn-sm btn-file">
-                <span class="fileinput-new"><i class="glyphicon glyphicon-folder-open"></i>&nbsp; Выбрать</span>
-                <span class="fileinput-exists"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;</span>
-                <input type="file" name="image" accept="image/*">
-              </span>
-              <a href="#" class="btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput"><i class="glyphicon glyphicon-trash"></i> Удалить</a>
+  <div class="text-end mb-3">
+    <a href="/{{ $lang }}/admin/posts" class="btn btn-primary"><i class="material-icons">arrow_back</i></a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-body">
+          <form action="{{ route('posts.store', $lang) }}" method="post" id="postForm" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-3">
+              <label for="title" class="form-label">Название</label>
+              <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ old('title') }}" required>
             </div>
-          </div>
+            <div class="mb-3">
+              <label for="slug" class="form-label">URI</label>
+              <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ old('slug') }}">
+            </div>
+            <div class="mb-3">
+              <label for="category_id" class="form-label">Категории</label>
+              <select id="category_id" name="category_id" class="form-select" required>
+                <option value=""></option>
+                <?php $traverse = function ($nodes, $prefix = null) use (&$traverse, $__env) { ?>
+                  <?php foreach ($nodes as $node) : ?>
+                    <option value="{{ $node->id }}">{{ PHP_EOL.$prefix.' '.$node->title }}</option>
+                    <?php $traverse($node->children, $prefix.'___'); ?>
+                  <?php endforeach; ?>
+                <?php }; ?>
+                <?php $traverse($categories); ?>
+              </select>
+            </div>
+            <div class="mb-3" id="banner">
+              <label for="image" class="form-label">Фон</label><br>
+              <input type="file" class="form-control image-input" name="image" accept="image/*" data-preview="preview">
+              <div class="my-2">
+                <img id="preview" src="/joystick/no-image-middle.png" class="img-fluid border" style="width: auto; max-height: 260px;">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="headline" class="form-label">Заголовок</label>
+              <input type="text" class="form-control" id="headline" name="headline" minlength="2" maxlength="500" value="{{ old('headline') }}">
+            </div>
+            <div class="mb-3">
+              <label for="sort_id" class="form-label">Номер</label>
+              <input type="text" class="form-control" id="sort_id" name="sort_id" maxlength="5" value="{{ old('sort_id') }}">
+            </div>
+            <div class="mb-3">
+              <label for="meta_title" class="form-label">Мета название (краткий заголовок, который отображается в результатах поиска)</label>
+              <input type="text" class="form-control" id="meta_title" name="meta_title" maxlength="255" value="{{ old('meta_title') }}" required>
+            </div>
+            <div class="mb-3">
+              <label for="meta_description" class="form-label">Мета описание (краткое описание страницы, которое отображается в результатах поиска)</label>
+              <input type="text" class="form-control" id="meta_description" name="meta_description" maxlength="255" value="{{ old('meta_description') }}">
+            </div>
+            <div class="mb-3">
+              <label for="content" class="form-label">Контент</label>
+              <div>
+                @include('components.bootstrap-5-editor', ['attribute' => 'content', 'content' => old('content')])
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="lang" class="form-label">Язык</label>
+              <select id="lang" name="lang" class="form-select" required>
+                @foreach($languages as $language)
+                  <option value="{{ $language->slug }}" @if(old('lang') == $language->slug) selected @endif>{{ $language->title }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="status" name="status" checked>
+                <label class="form-check-label" for="status">Активен</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-success"><i class="material-icons">save</i></button>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="meta_title">Мета название</label>
-          <input type="text" class="form-control" id="meta_title" name="meta_title" maxlength="255" value="{{ (old('meta_title')) ? old('meta_title') : '' }}" required>
-        </div>
-        <div class="form-group">
-          <label for="meta_description">Мета описание</label>
-          <input type="text" class="form-control" id="meta_description" name="meta_description" maxlength="255" value="{{ (old('meta_description')) ? old('meta_description') : '' }}">
-        </div>
-        <div class="form-group">
-          <label for="content">Контент</label>
-          <textarea class="form-control" id="summernote" name="content" rows="5">{{ (old('content')) ? old('content') : '' }}</textarea>
-        </div>
-        <div class="form-group">
-          <label for="lang">Язык</label>
-          <select id="lang" name="lang" class="form-control" required>
-            @foreach($languages as $language)
-              @if (old('lang') == $language->slug)
-                <option value="{{ $language->slug }}" selected>{{ $language->title }}</option>
-              @else
-                <option value="{{ $language->slug }}">{{ $language->title }}</option>
-              @endif
-            @endforeach
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="status">Статус:</label>
-          <label>
-            <input type="checkbox" id="status" name="status" checked> Активен
-          </label>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-success"><i class="material-icons">save</i></button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 @endsection
 
 @section('head')
-  <link href="/joystick/css/jasny-bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
 @endsection
 
 @section('scripts')
-  <script src="/joystick/js/jasny-bootstrap.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+  <script src="/joystick/js/bootstrap5editor.js"></script>
+
   <script>
-    /* Summernote */
-    $(document).ready(function() {
-      $('#summernote').summernote({
-        height: 150
+    document.addEventListener('DOMContentLoaded', function () {
+      const banner = document.getElementById('banner');
+      if (!banner) return;
+      banner.addEventListener('change', function (e) {
+        const input = e.target.closest('.image-input');
+        if (!input) return;
+        const file = input.files && input.files[0] ? input.files[0] : null;
+        const previewId = input.dataset.preview;
+        const previewImg = previewId ? document.getElementById(previewId) : null;
+        if (!previewImg) return;
+        if (file && file.type && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            previewImg.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImg.src = '/joystick/no-image-middle.png';
+        }
       });
     });
+
   </script>
 @endsection

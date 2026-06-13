@@ -1,0 +1,36 @@
+.fm-item {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: .375rem;
+  text-align: center;
+  height: 100%;
+  transition: background-color .2s;
+  cursor: pointer;
+}
+
+.fm-item:hover {
+  background-color: #f8f9fa;
+}
+
+.fm-icon {
+  font-size: 3.75rem;
+  color: #6c757d;
+}
+
+.fm-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 10px;
+  font-size: .875rem;
+}
+
+.fm-img-thumbnail {
+  height: 60px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}

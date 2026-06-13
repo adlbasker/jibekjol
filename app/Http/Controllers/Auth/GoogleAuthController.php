@@ -71,7 +71,7 @@ class GoogleAuthController extends Controller
             $user->save();
         }
 
-        Auth::login($user, true);
+        Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()->intended(app()->getLocale().'/profile/register')

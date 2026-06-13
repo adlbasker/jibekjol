@@ -14,11 +14,11 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $count_apps = App::count();
-        $count_users = User::count();
-        $count_posts = Post::count();
+        $countApps = App::count();
+        $countUsers = User::count();
+        $countPosts = Post::count();
 
-    	return view('joystick.index', compact('count_apps', 'count_posts', 'count_users'));
+        return view('joystick.index', compact('countApps', 'countPosts', 'countUsers'));
     }
 
     public function filemanager()

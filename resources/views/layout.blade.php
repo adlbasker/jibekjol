@@ -61,7 +61,7 @@
       <a href="/{{ $lang }}/" class="navbar-brand p-0"><!-- JibekJol -->
         <img src="/img/jj-logo-white.png">
       </a>
-      <div class="dropdown me-auto">
+      <div class="dropdown me-sm-3 me-auto">
         <button class="btn btn-outline-light dropdown-toggle text-uppercase" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           {{ $lang }}
         </button>
@@ -76,20 +76,34 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav py-2 mx-auto-">
+        <ul class="navbar-nav py-2">
           <li class="nav-item">
             <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/"><i class="bi bi-house-fill text-white"></i></a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/market"><i class="bi bi-shop-window text-white"></i> Market</a>
+          </li>
+          @auth
+            <li class="nav-item">
+              <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> {{ __('Tracking') }}</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link px-3 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person"></i> {{ __('app.my_account') }}
+              </a>
+              <ul class="dropdown-menu">
+                <!-- <li><hr class="dropdown-divider"></li> -->
+                <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile"><i class="bi bi-person"></i> {{ __('app.my_profile') }}</a></li>
+                <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile/orders"><i class="bi bi-bag-check"></i> {{ __('app.my_orders') }}</a></li>
+                <li><a class="dropdown-item py-2" href="/{{ $lang }}/client/archive"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a></li>
+              </ul>
+            </li>
+          @endauth
           @foreach($pages as $page)
             <li class="nav-item">
               <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/i/{{ $page->slug }}">{{ $page->title }}</a>
             </li>
           @endforeach
-          @auth
-            <li class="nav-item">
-              <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> {{ __('app.my_tracks') }}</a>
-            </li>
-          @endauth
         </ul>
         <div class="ms-auto">
           @include('components.auth-dropdown')

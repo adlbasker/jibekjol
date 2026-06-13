@@ -5,34 +5,35 @@
 
   @include('components.alerts')
 
-  <p class="text-right">
-    <a href="/{{ $lang }}/admin/companies" class="btn btn-primary"><i class="material-icons md-18">arrow_back</i></a>
-  </p>
+  <div class="text-end mb-3">
+    <a href="/{{ $lang }}/admin/companies" class="btn btn-primary"><i class="material-icons">arrow_back</i></a>
+  </div>
+
   <div class="row">
     <div class="col-md-7">
-      <div class="panel panel-default">
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-body">
           <form action="{{ route('companies.store', $lang) }}" method="post" enctype="multipart/form-data">
-            {!! csrf_field() !!}
-            <div class="form-group">
-              <label for="title">Название</label>
-              <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ (old('title')) ? old('title') : '' }}" required>
+            @csrf
+            <div class="mb-3">
+              <label for="title" class="form-label">Название</label>
+              <input type="text" class="form-control" id="title" name="title" minlength="2" maxlength="80" value="{{ old('title') }}" required>
             </div>
-            <div class="form-group">
-              <label for="slug">Slug</label>
-              <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ (old('slug')) ? old('slug') : '' }}">
+            <div class="mb-3">
+              <label for="slug" class="form-label">Slug</label>
+              <input type="text" class="form-control" id="slug" name="slug" minlength="2" maxlength="80" value="{{ old('slug') }}">
             </div>
-            <div class="form-group">
-              <label for="sort_id">Номер</label>
-              <input type="text" class="form-control" id="sort_id" name="sort_id" value="{{ (old('sort_id')) ? old('sort_id') : NULL }}">
+            <div class="mb-3">
+              <label for="sort_id" class="form-label">Номер</label>
+              <input type="text" class="form-control" id="sort_id" name="sort_id" value="{{ old('sort_id') }}">
             </div>
-            <div class="form-group">
-              <label for="bin">БИН</label>
-              <input type="text" class="form-control" id="bin" name="bin" value="{{ (old('bin')) ? old('bin') : NULL }}">
+            <div class="mb-3">
+              <label for="bin" class="form-label">БИН</label>
+              <input type="text" class="form-control" id="bin" name="bin" value="{{ old('bin') }}">
             </div>
-            <div class="form-group">
-              <label for="region_id">Регионы</label>
-              <select id="region_id" name="region_id" class="form-control">
+            <div class="mb-3">
+              <label for="region_id" class="form-label">Регионы</label>
+              <select id="region_id" name="region_id" class="form-select">
                 <option value=""></option>
                 <?php $traverse = function ($nodes, $prefix = null) use (&$traverse) { ?>
                   <?php foreach ($nodes as $node) : ?>
@@ -43,73 +44,65 @@
                 <?php $traverse($regions); ?>
               </select>
             </div>
-            <div class="form-group">
-              <label for="currency_id">Валюты</label>
-              <select id="currency_id" name="currency_id" class="form-control">
+            <div class="mb-3">
+              <label for="currency_id" class="form-label">Валюты</label>
+              <select id="currency_id" name="currency_id" class="form-select">
                 <option value=""></option>
-                <?php foreach ($currencies as $currency) : ?>
+                @foreach ($currencies as $currency)
                   <option value="{{ $currency->id }}">{{ $currency->symbol }} - {{ $currency->currency }}</option>
-                <?php endforeach; ?>
+                @endforeach
               </select>
             </div>
-            <div class="form-group">
-              <label for="legal_address">Юридический адрес</label>
-              <input type="text" class="form-control" id="legal_address" name="legal_address" value="{{ (old('legal_address')) ? old('legal_address') : NULL }}">
+            <div class="mb-3">
+              <label for="legal_address" class="form-label">Юридический адрес</label>
+              <input type="text" class="form-control" id="legal_address" name="legal_address" value="{{ old('legal_address') }}">
             </div>
-            <div class="form-group">
-              <label for="actual_address">Фактический адрес</label>
-              <input type="text" class="form-control" id="actual_address" name="actual_address" value="{{ (old('actual_address')) ? old('actual_address') : NULL }}">
+            <div class="mb-3">
+              <label for="actual_address" class="form-label">Фактический адрес</label>
+              <input type="text" class="form-control" id="actual_address" name="actual_address" value="{{ old('actual_address') }}">
             </div>
-            <div class="form-group">
-              <label for="image">Логотип</label><br>
-              <div class="fileinput fileinput-new" data-provides="fileinput">
-                <div class="fileinput-new thumbnail" style="width:300px;height:200px;"></div>
-                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width:300px;max-height:200px;"></div>
-                <div>
-                  <span class="btn btn-default btn-sm btn-file">
-                    <span class="fileinput-new"><i class="glyphicon glyphicon-folder-open"></i>&nbsp; Выбрать</span>
-                    <span class="fileinput-exists"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;</span>
-                    <input type="file" name="image" accept="image/*">
-                  </span>
-                  <a href="#" class="btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput"><i class="glyphicon glyphicon-trash"></i> Удалить</a>
-                </div>
+            <div class="mb-3" id="logo">
+              <label for="image" class="form-label">Логотип</label><br>
+              <input type="file" class="form-control image-input" name="image" accept="image/*" data-preview="preview">
+              <div class="my-2">
+                <img id="preview" src="/joystick/no-image-middle.png" class="img-fluid border" style="width: auto; max-height: 260px;">
               </div>
             </div>
-            <div class="form-group">
-              <label for="about">О компании</label>
-              <textarea class="form-control" id="about" name="about" rows="5">{{ (old('about')) ? old('about') : '' }}</textarea>
+            <div class="mb-3">
+              <label for="about" class="form-label">О компании</label>
+              <textarea class="form-control" id="about" name="about" rows="5">{{ old('about') }}</textarea>
             </div>
-            <div class="form-group">
-              <label for="phones">Номера телефонов</label>
-              <input type="text" class="form-control" id="phones" name="phones" value="{{ (old('phones')) ? old('phones') : NULL }}">
+            <div class="mb-3">
+              <label for="phones" class="form-label">Номера телефонов</label>
+              <input type="text" class="form-control" id="phones" name="phones" value="{{ old('phones') }}">
             </div>
-            <div class="form-group">
-              <label for="links">Website</label>
-              <input type="text" class="form-control" id="links" name="links" value="{{ (old('links')) ? old('links') : NULL }}">
+            <div class="mb-3">
+              <label for="links" class="form-label">Website</label>
+              <input type="text" class="form-control" id="links" name="links" value="{{ old('links') }}">
             </div>
-            <div class="form-group">
-              <label for="emails">Emails</label>
-              <input type="text" class="form-control" id="emails" name="emails" value="{{ (old('emails')) ? old('emails') : NULL }}">
+            <div class="mb-3">
+              <label for="emails" class="form-label">Emails</label>
+              <input type="text" class="form-control" id="emails" name="emails" value="{{ old('emails') }}">
             </div>
-            <div class="form-group">
-              <label for="is_supplier">Поставщик:</label>
-              <label>
-                <input type="checkbox" id="is_supplier" name="is_supplier" checked> Активен
-              </label>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" checked>
+                <label class="form-check-label" for="is_supplier">Поставщик</label>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="is_customer">Заказщик:</label>
-              <label>
-                <input type="checkbox" id="is_customer" name="is_customer" checked> Активен
-              </label>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="is_customer" name="is_customer" checked>
+                <label class="form-check-label" for="is_customer">Заказщик</label>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="status">Статус:</label>
-              <label>
-                <input type="checkbox" id="status" name="status" checked> Активен
-              </label>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="status" name="status" checked>
+                <label class="form-check-label" for="status">Активен</label>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <button type="submit" class="btn btn-success"><i class="material-icons">save</i></button>
             </div>
           </form>
@@ -120,9 +113,32 @@
 @endsection
 
 @section('head')
-  <link href="/joystick/css/jasny-bootstrap.min.css" rel="stylesheet">
+
 @endsection
 
 @section('scripts')
-  <script src="/joystick/js/jasny-bootstrap.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const logo = document.getElementById('logo');
+      if (!logo) return;
+      logo.addEventListener('change', function (e) {
+        const input = e.target.closest('.image-input');
+        if (!input) return;
+        const file = input.files && input.files[0] ? input.files[0] : null;
+        const previewId = input.dataset.preview;
+        const previewImg = previewId ? document.getElementById(previewId) : null;
+        if (!previewImg) return;
+        if (file && file.type && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            previewImg.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImg.src = '/joystick/no-image-middle.png';
+        }
+      });
+    });
+
+  </script>
 @endsection

@@ -83,13 +83,11 @@ return [
     'track_not_match' => 'Трек код не совпадает',
     'registration_success' => 'Регистрация прошла успешно, Рахмет! Ваш личный ID: :id_client',
     'fill_form' => 'Заполните анкету',
-    'data_added' => 'Данные добавлены',
-    'data_updated' => 'Данные обновлены',
-    'data_deleted' => 'Данные удалены',
 
     // Client
     'my_account' => 'Мой аккаунт',
     'my_tracks' => 'Мои треки',
+    'my_orders' => 'Мои заказы',
     'my_archive' => 'Мой архив',
     'parcel_tracks' => 'Треки посылок',
     'archive_tracks' => 'Архив треков',

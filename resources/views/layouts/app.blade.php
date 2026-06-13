@@ -7,8 +7,6 @@
   <meta name="author" content="ismoon">
   <title>{{ config('app.name', 'JibekJol') }}</title>
 
-  <link rel="canonical" href="">
-
   <!-- Bootstrap core CSS -->
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
 
@@ -60,7 +58,7 @@
       <a href="/{{ $lang }}/" class="navbar-brand p-0"><!-- JibekJol -->
         <img src="/img/jj-logo-white.png">
       </a>
-      <div class="dropdown me-auto">
+      <div class="dropdown me-sm-3 me-auto">
         <button class="btn btn-outline-light dropdown-toggle text-uppercase" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           {{ $lang }}
         </button>
@@ -79,6 +77,9 @@
         <ul class="navbar-nav py-2 mx-auto-">
           <li class="nav-item">
             <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}"><i class="bi bi-house-fill text-white"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" aria-current="page" href="/{{ $lang }}/market"><i class="bi bi-shop-window text-white"></i> Market</a>
           </li>
           @auth
             <li class="nav-item">

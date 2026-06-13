@@ -17,7 +17,7 @@ class TrackController extends Controller
     {
         $tracks = Track::orderBy('id', 'desc')->paginate(50);
 
-        return view('cargo.tracks.index', compact('tracks'));
+        return view('joystick.cargo.tracks.index', compact('tracks'));
     }
 
     public function search(Request $request, $lang)
@@ -33,29 +33,37 @@ class TrackController extends Controller
             ->paginate(50)
             ->appends($request->query());
 
-        return view('cargo.tracks.index', compact('tracks'));
+        return view('joystick.cargo.tracks.index', compact('tracks'));
     }
 
     public function searchUsers(Request $request, $lang, $trackId)
     {
-        $text = trim(strip_tags($request->text));
+        $users = $this->findUsersBySearch(trim(strip_tags($request->text)));
 
-        $users = User::query()
-            ->when(strlen($text) >= 2, function($query) use ($text) {
+        return view('components.dropdown-users', compact('trackId', 'users'));
+    }
+
+    public function searchUsersCreate(Request $request, $lang)
+    {
+        $users = $this->findUsersBySearch(trim(strip_tags($request->text)));
+
+        return view('components.dropdown-users-create', compact('users'));
+    }
+
+    private function findUsersBySearch(string $text)
+    {
+        return User::query()
+            ->when(strlen($text) >= 2, function ($query) use ($text) {
                 $query->where('name', 'like', $text.'%')
                     ->orWhere('lastname', 'like', $text.'%')
                     ->orWhere('email', 'like', $text.'%')
                     ->orWhere('tel', 'like', '%'.$text.'%')
                     ->orWhere('id_client', 'like', '%'.$text.'%')
                     ->take(15);
-            }, function($query) {
+            }, function ($query) {
                 $query->take(0);
             })
             ->get();
-
-        if ($users->count() > 0) {
-            return view('components.dropdown-users', compact('trackId', 'users'));
-        }
     }
 
     public function pinUser($lang, $trackId, $userId)
@@ -98,7 +106,7 @@ class TrackController extends Controller
 
         $statuses = Status::get();
 
-        return view('cargo.tracks.user', compact('user', 'tracks', 'statuses'));
+        return view('joystick.cargo.tracks.user', compact('user', 'tracks', 'statuses'));
     }
 
     public function create($lang)
@@ -106,7 +114,7 @@ class TrackController extends Controller
         $statuses = Status::get();
         $regions = Region::get()->toTree();
 
-        return view('cargo.tracks.create', compact('statuses', 'regions'));
+        return view('joystick.cargo.tracks.create', compact('statuses', 'regions'));
     }
 
     public function store(Request $request)
@@ -120,6 +128,7 @@ class TrackController extends Controller
         $track->description = $request->description;
         $track->lang = $request->lang;
         $track->status = $request->status;
+        $track->user_id = $request->user_id ?: null;
         $track->save();
 
         return redirect($request->lang.'/admin/tracks')->with('status', 'Запись добавлена!');
@@ -131,7 +140,7 @@ class TrackController extends Controller
         $statuses = Status::get();
         $regions = Region::get()->toTree();
 
-        return view('cargo.tracks.edit', compact('track', 'statuses', 'regions'));
+        return view('joystick.cargo.tracks.edit', compact('track', 'statuses', 'regions'));
     }
 
     public function update(Request $request, $lang, $id)

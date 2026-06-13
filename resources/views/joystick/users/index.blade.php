@@ -5,70 +5,73 @@
 
   @include('components.alerts')
 
-  <form action="/{{ $lang }}/admin/users/search/user" method="get">
-    <div class="row">
+  <form action="/{{ $lang }}/admin/users/search/user" method="get" class="mb-3">
+    <div class="row g-2">
       <div class="col-md-4">
         <div class="input-group">
-          <input type="search" class="form-control input-xs typeahead-goods" name="text" value="{{ $_GET['text'] ?? '' }}" placeholder="Поиск...">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-          </span>
+          <input type="search" class="form-control" name="text" value="{{ $_GET['text'] ?? '' }}" placeholder="Поиск...">
+          <button class="btn btn-outline-secondary" type="submit"><i class="material-icons">search</i></button>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="btn-group" role="group" aria-label="...">
+        <div class="btn-group" role="group">
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <?php $roleTitle = 'Роли'; ?>
-              {{  (isset($_GET['role_id'])) ? $roles->firstWhere('id', $_GET['role_id'])->description : $roleTitle }} <span class="caret"></span>
+              {{ (isset($_GET['role_id'])) ? $roles->firstWhere('id', $_GET['role_id'])->description : $roleTitle }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-category">
-              <?php foreach ($roles as $role) : ?>
+            <ul class="dropdown-menu p-3" style="min-width: 200px;">
+              @foreach ($roles as $role)
                 <li>
-                  <a href="#">
-                    <label><input type="radio" name="role_id" value="{{ $role->id }}"> {{ $role->description }}</label>
-                  </a>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role_id" id="role{{ $role->id }}" value="{{ $role->id }}" @if(isset($_GET['role_id']) && $_GET['role_id'] == $role->id) checked @endif>
+                    <label class="form-check-label" for="role{{ $role->id }}">
+                      {{ $role->description }}
+                    </label>
+                  </div>
                 </li>
-              <?php endforeach; ?>
+              @endforeach
             </ul>
           </div>
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <?php $regionTitle = 'Регионы';  ?>
-              {{ (isset($_GET['region_id'])) ? $regions->firstWhere('id', $_GET['region_id'])->title : $regionTitle }} <span class="caret"></span>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <?php $regionTitle = 'Регионы'; ?>
+              {{ (isset($_GET['region_id'])) ? $regions->firstWhere('id', $_GET['region_id'])->title : $regionTitle }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-category">
-              <?php $traverse = function ($nodes, $prefix = null) use (&$traverse, $lang) { ?>
-                <?php foreach ($nodes as $node) : ?>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-category p-3" style="min-width: 250px;">
+              <?php $traverse = function ($nodes, $prefix = null) use (&$traverse) { ?>
+                <?php foreach ($nodes as $node): ?>
                   <li>
-                    <a href="#">
-                      <label><input type="radio" name="region_id" value="{{ $node->id }}"> {{ PHP_EOL.$prefix.' '.$node->title }}</label>
-                    </a>
-                  </li>`
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="region_id" id="region{{ $node->id }}" value="{{ $node->id }}">
+                      <label class="form-check-label" for="region{{ $node->id }}">
+                        {{ $prefix.' '.$node->title }}
+                      </label>
+                    </div>
+                  </li>
                   <?php $traverse($node->children, $prefix.'___'); ?>
                 <?php endforeach; ?>
               <?php }; ?>
-              <?php $traverse($regions->toTree()); ?>
+              <?php $traverse($regions); ?>
             </ul>
           </div>
-          <a href="/{{ $lang }}/admin/users" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-refresh"></span></a>
-        </div> 
+          <a href="/{{ $lang }}/admin/users" class="btn btn-outline-secondary" title="Сбросить"><i class="material-icons">refresh</i></a>
+        </div>
       </div>
     </div>
-  </form><br>
+  </form>
 
   <div class="table-responsive">
-    <table class="table table-striped table-condensed">
+    <table class="table table-striped table-hover table-sm">
       <thead>
-        <tr class="active">
-          <td>№</td>
-          <td>Имя</td>
-          <td>Email</td>
-          <td>Номер телефона</td>
-          <td>Регион</td>
-          <td>ID клиента</td>
-          <td>Роль</td>
-          <td class="text-right">Функции</td>
+        <tr class="table-active">
+          <th width="30px">№</th>
+          <th>Имя</th>
+          <th>Email</th>
+          <th>Номер телефона</th>
+          <th>Регион</th>
+          <th>Роль</th>
+          <th class="text-end">Функции</th>
         </tr>
       </thead>
       <tbody>
@@ -80,18 +83,17 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->tel }}</td>
             <td>{{ $user->region->title ?? '' }}</td>
-            <td><a href="/{{ $lang }}/admin/tracks/user/{{ $user->id }}">{{ $user->id_client ?? 'No ID' }}</a></td>
             <td>
               @foreach($user->roles as $role)
-                {{ $role->name }}<br>
+                <span class="badge bg-secondary">{{ $role->name }}</span><br>
               @endforeach
             </td>
-            <td class="text-right text-nowrap">
-              <a class="btn btn-link btn-xs" href="{{ route('users.edit', [$lang, $user->id]) }}" title="Редактировать"><i class="material-icons md-18">mode_edit</i></a>
-              <form method="POST" action="{{ route('users.destroy', [$lang, $user->id]) }}" accept-charset="UTF-8" class="btn-delete">
-                <input name="_method" type="hidden" value="DELETE">
-                <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-link btn-xs" onclick="return confirm('Удалить запись?')"><i class="material-icons md-18">clear</i></button>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-link btn-sm mb-0" href="{{ route('users.edit', [$lang, $user->id]) }}" title="Редактировать"><i class="material-icons">mode_edit</i></a>
+              <form method="POST" action="{{ route('users.destroy', [$lang, $user->id]) }}" accept-charset="UTF-8" class="btn-delete d-inline">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="btn btn-link btn-sm mb-0" onclick="return confirm('Удалить запись?')"><i class="material-icons">clear</i></button>
               </form>
             </td>
           </tr>
@@ -99,6 +101,7 @@
       </tbody>
     </table>
   </div>
-  {{ $users->links() }}
-
+  <div class="mt-3">
+    {{ $users->links() }}
+  </div>
 @endsection

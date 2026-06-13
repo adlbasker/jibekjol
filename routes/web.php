@@ -8,17 +8,28 @@ use App\Http\Controllers\Joystick\PageController;
 use App\Http\Controllers\Joystick\PostController;
 use App\Http\Controllers\Joystick\SectionController;
 use App\Http\Controllers\Joystick\AppController;
-
+use App\Http\Controllers\Joystick\BannerController;
 use App\Http\Controllers\Joystick\ModeController;
+use App\Http\Controllers\Joystick\CurrencyController;
 use App\Http\Controllers\Joystick\CompanyController;
-use App\Http\Controllers\Joystick\BranchController;
 use App\Http\Controllers\Joystick\RegionController;
 use App\Http\Controllers\Joystick\UserController;
 use App\Http\Controllers\Joystick\RoleController;
 use App\Http\Controllers\Joystick\PermissionController;
 use App\Http\Controllers\Joystick\LanguageController;
+use App\Http\Controllers\Joystick\CategoryController;
+use App\Http\Controllers\Joystick\ProductController;
+use App\Http\Controllers\Joystick\ProductExtensionController;
+use App\Http\Controllers\Joystick\FileManagerController;
+use App\Http\Controllers\Joystick\OrderController;
+use App\Http\Controllers\Joystick\OptionController;
+use App\Http\Controllers\Joystick\UnitController;
+
 
 // Site Controllers
+use App\Http\Controllers\MarketController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\InputController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController as BlogController;
@@ -27,6 +38,7 @@ use App\Http\Controllers\PageController as SiteController;
 // Cargo Controllers
 use App\Http\Controllers\Cargo\TrackController;
 use App\Http\Controllers\Cargo\StatusController;
+use App\Http\Controllers\Cargo\BranchController;
 use App\Http\Controllers\Cargo\TrackExtensionController;
 
 use App\Http\Livewire\Client\Index as ClientIndex;
@@ -79,26 +91,36 @@ Route::group(['prefix' => '{locale}/admin', 'middleware' => ['auth', 'roles:admi
         // Cargo
         'tracks' => TrackController::class,
         'statuses' => StatusController::class,
+        'branches' => BranchController::class,
 
         // Content
         'pages' => PageController::class,
         'posts' => PostController::class,
         'sections' => SectionController::class,
+        'categories' => CategoryController::class,
+        // 'projects' => ProjectController::class,
+        // 'projects-index' => ProjectIndexController::class,
+        'products' => ProductController::class,
+        'banners' => BannerController::class,
+        'orders' => OrderController::class,
+        'options' => OptionController::class,
         'modes' => ModeController::class,
         'apps' => AppController::class,
 
         // Resources
         'companies' => CompanyController::class,
-        'branches' => BranchController::class,
+        'currencies' => CurrencyController::class,
         'regions' => RegionController::class,
         'users' => UserController::class,
         'roles' => RoleController::class,
         'permissions' => PermissionController::class,
+        'units' => UnitController::class,
         'languages' => LanguageController::class,
     ]);
 
     // Cargo
     Route::get('tracks/search/tracks', [TrackController::class, 'search']);
+    Route::get('tracks/search/users', [TrackController::class, 'searchUsersCreate']);
     Route::get('tracks/{id}/search/users', [TrackController::class, 'searchUsers']);
     Route::get('tracks/{id}/pin-user/{userId}', [TrackController::class, 'pinUser']);
     Route::get('tracks/{id}/unpin-user', [TrackController::class, 'unpinUser']);
@@ -108,6 +130,27 @@ Route::group(['prefix' => '{locale}/admin', 'middleware' => ['auth', 'roles:admi
     Route::get('arrival-tracks', [TrackExtensionController::class, 'arrivalTracks']);
     Route::post('upload-tracks', [TrackExtensionController::class, 'uploadTracks']);
     Route::post('export-tracks', [TrackExtensionController::class, 'exportTracks']);
+
+    // Content
+    Route::get('categories-actions', [CategoryController::class, 'actionCategories']);
+    Route::get('products/{id}/copy', [ProductController::class, 'copy']);
+    Route::get('products-search', [ProductExtensionController::class, 'search']);
+    Route::get('products-search-ajax', [ProductExtensionController::class, 'searchAjax']);
+    Route::get('products-actions', [ProductExtensionController::class, 'actionProducts']);
+    Route::get('products-category/{id}', [ProductExtensionController::class, 'categoryProducts']);
+    Route::get('joytable', [ProductExtensionController::class, 'joytable']);
+    Route::post('joytable-update', [ProductExtensionController::class, 'joytableUpdate']);
+    Route::get('products-export', [ProductExtensionController::class, 'export']);
+    Route::get('products-import', [ProductExtensionController::class, 'importView']);
+    Route::post('products-import', [ProductExtensionController::class, 'import']);
+    Route::get('products-price/edit', [ProductExtensionController::class, 'calcForm']);
+    Route::post('products-price/update', [ProductExtensionController::class, 'priceUpdate']);
+
+    Route::get('filemanager', [FileManagerController::class, 'filemanager']);
+    Route::post('filemanager/mkdir', [FileManagerController::class, 'filemanagerMkdir']);
+    Route::post('filemanager/upload', [FileManagerController::class, 'filemanagerUpload']);
+    Route::delete('filemanager/delete', [FileManagerController::class, 'filemanagerDelete']);
+    Route::get('frame-filemanager', [FileManagerController::class, 'frameFilemanager']);
 
     // Resources
     Route::get('companies-actions', [CompanyController::class, 'actionCompanies']);
@@ -120,10 +163,37 @@ Route::group(['prefix' => '{locale}/admin', 'middleware' => ['auth', 'roles:admi
 // Joystick Administration
 Route::redirect('admin', '/'.app()->getLocale().'/admin');
 
+// Market
+Route::redirect('market', '/'.app()->getLocale().'/market');
+
+Route::group(['prefix' => '{lang}/market'], function() {
+
+    Route::get('/', [MarketController::class, 'index']);
+    Route::get('search', [MarketController::class, 'search']);
+    Route::get('search-ajax', [MarketController::class, 'searchAjax']);
+    Route::get('{category}/{id}', [MarketController::class, 'categoryProducts']);
+    Route::get('{id}-{product}', [MarketController::class, 'product']);
+
+    // Cart Actions
+    Route::get('cart', [CartController::class, 'cart']);
+    Route::get('checkout', [CartController::class, 'checkout']);
+    Route::get('add-to-cart/{id}', [CartController::class, 'addToCart']);
+    Route::get('remove-from-cart/{id}', [CartController::class, 'removeFromCart']);
+    Route::get('clear-cart', [CartController::class, 'clearCart']);
+    Route::post('store-order', [CartController::class, 'storeOrder']);
+    Route::get('destroy-from-cart/{id}', [CartController::class, 'destroy']);
+
+    // Favourite Actions
+    Route::get('favorite', [FavouriteController::class, 'getFavorite']);
+    Route::get('toggle-favourite/{id}', [FavouriteController::class, 'toggleFavourite']);
+});
+
+
 // User Profile
 Route::group(['prefix' => '{locale}', 'middleware' => 'auth'], function() {
 
     Route::get('profile', [ProfileController::class, 'profile']);
+    Route::get('profile/orders', [ProfileController::class, 'orders']);
     Route::get('profile/edit', [ProfileController::class, 'editProfile']);
     Route::put('profile', [ProfileController::class, 'updateProfile']);
     Route::get('profile/register', [ProfileController::class, 'registerProfile']);

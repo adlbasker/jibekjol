@@ -38,7 +38,7 @@
         <a href="/{{ $lang }}/register" class="btn btn-warning btn-lg">{{ __('app.register_btn') }}</a>
         <a href="{{ route('google.redirect', $lang) }}" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-google"></i> {{ __('app.google_login') }}</a>
       @else
-        <a href="/{{ $lang }}/client" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-upc"></i> {{ __('app.my_tracks') }}</a>
+        <a href="/{{ $lang }}/client" class="btn btn-outline-primary btn-lg m-2"><i class="bi bi-upc"></i> {{ __('Tracking') }}</a>
         <a href="/{{ $lang }}/client/archive" class="btn btn-outline-dark btn-lg"><i class="bi bi-archive"></i> {{ __('app.my_archive') }}</a>
       @endguest
     </div>

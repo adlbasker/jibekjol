@@ -7,8 +7,6 @@
   <meta name="author" content="ismoon">
   <title>Jibekjol storage</title>
 
-  <link rel="canonical" href="">
-
   <!-- Bootstrap core CSS -->
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
 
@@ -102,7 +100,7 @@
             <div class="text-muted px-3 py-1">{{ Auth::user()->name . ' ' . Auth::user()->lastname }}</div>
             <li><a class="dropdown-item py-2" href="/{{ $lang }}"><i class="bi bi-house-fill"></i> Main</a></li>
             <li><a class="dropdown-item py-2" href="/{{ $lang }}/profile"><i class="bi bi-person-circle"></i> My profile</a></li>
-            <li><a class="dropdown-item py-2" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> My tracks</a></li>
+            <li><a class="dropdown-item py-2" href="/{{ $lang }}/client"><i class="bi bi-upc"></i> Tracking</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <form method="POST" action="/{{ app()->getLocale() }}/logout">

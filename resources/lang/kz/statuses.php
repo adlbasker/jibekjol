@@ -2,6 +2,10 @@
 
 return [
 
+    'entry_added' => 'Жазба қосылды',
+    'entry_changed' => 'Жазба өзгертілді',
+    'entry_deleted' => 'Жазба өшірілді',
+
 	'classes' => [
 	    'added' => [
 	      	'card-color' => 'bg-added',

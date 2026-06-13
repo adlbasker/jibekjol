@@ -14,12 +14,12 @@ class StatusController extends Controller
     {
         $statuses = Status::orderBy('id')->get();
 
-        return view('cargo.statuses.index', compact('statuses'));
+        return view('joystick.cargo.statuses.index', compact('statuses'));
     }
 
     public function create($lang)
     {
-        return view('cargo.statuses.create');
+        return view('joystick.cargo.statuses.create');
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class StatusController extends Controller
     {
         $status = Status::findOrFail($id);
 
-        return view('cargo.statuses.edit', compact('status'));
+        return view('joystick.cargo.statuses.edit', compact('status'));
     }
 
     public function update(Request $request, $lang, $id)

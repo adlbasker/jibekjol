@@ -27,6 +27,14 @@ class ProfileController extends Controller
         return view('account.profile', compact('user', 'language'));
     }
 
+    public function orders()
+    {
+        $user = Auth::user();
+        $orders = \App\Models\Order::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('account.orders', compact('orders'));
+    }
+
     public function editProfile()
     {
         $user = Auth::user();
