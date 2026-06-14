@@ -1,6 +1,8 @@
 @guest
-  <a href="/{{ $lang }}/login" class="btn btn-light btn-lg me-2">{{ __('app.login_btn') }}</a>
-  <a href="/{{ $lang }}/register" class="btn btn-warning btn-lg">{{ __('app.register_btn') }}</a>
+  <div class="ms-auto">
+    <a href="/{{ $lang }}/login" class="btn btn-light btn-lg me-2">{{ __('app.login_btn') }}</a>
+    <a href="/{{ $lang }}/register" class="btn btn-warning btn-lg">{{ __('app.register_btn') }}</a>
+  </div>
 @else
   <ul class="navbar-nav ms-auto">
     <!-- <li class="nav-item">
