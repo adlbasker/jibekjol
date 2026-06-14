@@ -52,7 +52,7 @@
                   <?php if ($node->descendants->count() > 0): $caret = '<i class="material-icons align-middle me-1">expand_more</i>'; ?>
                     class="node-title cursor-pointer" data-bs-toggle="collapse" data-bs-target=".{{ $node->id }}" aria-expanded="true" aria-controls="{{ $node->id }}"
                   <?php endif; ?>>
-                  {!! $caret !!} {{ PHP_EOL.$prefix.' '.$node->title }} <?php $caret = null; ?>
+                  {{ PHP_EOL.$prefix.' '.$node->title }} <?php $caret = null; ?>
                 </td>
                 <td>{{ $node->slug }}</td>
                 <td>{{ $node->sort_id }}</td>
