@@ -89,7 +89,7 @@ class MarketController extends Controller
         $productLang->save();
 
         $category = Category::where('id', $productLang->category_id)->firstOrFail();
-        // $products = Product::search($product->title)->where('status', 1)->take(4)->get();
+        // $products = Product::search($productLang->title)->where('status', 1)->take(4)->get();
 
         return view('market.product-detail')->with([
                 'productLang' => $productLang,

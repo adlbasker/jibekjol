@@ -101,10 +101,17 @@
           </li>
         </ul>
 
-        <form method="POST" action="/{{ $lang }}/logout" class="btn btn-outline-light ms-md-auto ms-3 mt-1">
-          @csrf
-          <a class="dropdown-item" href="#" onclick="event.preventDefault(); this.closest('form').submit();"><i class="bi bi-box-arrow-right"></i> {{ __('app.logout_btn') }}</a>
-        </form>
+        <ul class="navbar-nav ms-auto">
+          <!-- <li class="nav-item">
+            <a class="nav-link link-body-emphasis px-3" href="/{{ $lang }}/cart" aria-current="page"><i class="bi bi-cart"></i> {{ __('Cart') }}</a>
+          </li> -->
+          <li class="nav-item">
+            <form method="POST" action="/{{ $lang }}/logout">
+              @csrf
+              <a class="nav-link link-body-emphasis px-3" style="color: rgb(255 255 255 / 80%);" href="#" onclick="event.preventDefault(); this.closest('form').submit();"><i class="bi bi-box-arrow-right"></i> {{ __('app.logout_btn') }}</a>
+            </form>
+          </li>
+        </ul>
 
         <!-- <div class="mt-3 card bg-transparent d-lg-none">
           <div class="card-body">

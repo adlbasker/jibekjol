@@ -106,9 +106,9 @@
             </li>
           @endforeach
         </ul>
-        <div class="ms-auto">
-          @include('components.auth-dropdown')
-        </div>
+
+        <!-- Cart & Sign out -->
+        @include('components.auth-dropdown')
       </div>
     </div>
   </nav>
