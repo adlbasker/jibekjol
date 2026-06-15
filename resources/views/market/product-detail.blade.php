@@ -99,17 +99,22 @@
         </div>
         <br>
 
-        <!-- <div class="d-flex align-items-center mb-4">
+        <div class="d-flex align-items-center mb-4">
           <div class="input-group me-3" style="width: 130px;">
             <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('quantity').stepDown()">-</button>
             <input type="number" id="quantity" class="form-control text-center" value="1" min="1" max="{{ $product->count > 0 ? $product->count : 999 }}">
             <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('quantity').stepUp()">+</button>
           </div>
-          <button class="btn btn-primary " data-product-id="{{ $product->id }}" onclick="addToCart(this)">
-            <i class="bi bi-cart-plus me-2"></i> {{ __('Add to cart') }}
-          </button>
+
+          @if (is_array($items) AND isset($items[$product->id]))
+            <a href="/{{ $lang }}/market/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>
+          @else
+            <!-- <button class="btn btn-primary" data-product-id="{{ $product->id }}" onclick="addToCart(this)">
+              <i class="bi bi-cart-plus me-2"></i> {{ __('Add to cart') }}
+            </button> -->
+          @endif
         </div>
- -->
+
       </div>
     </div>
   </div>
@@ -123,30 +128,8 @@
   <script>
     const carousel = new bootstrap.Carousel('#carousel')
 
-  function addToCart(product_id, new_quantity) {
-
-    $.ajax({
-      type: "get",
-      url: '/add-to-cart/'+product_id,
-      dataType: "json",
-      data: {
-        "quantity": new_quantity
-      },
-      success: function(data) {
-        if (data.status) {
-          alert('Неверное количество');
-        }
-
-        var sum = parseInt(data.price) * data.quantity;
-
-        $('.sum-'+product_id).val(data.quantity);
-        $('.sum-item-'+product_id).text(sum);
-        $('.sum_total').text(data.sumPriceItems);
-      }
-    });
-  }
     // Add to cart
-    function addToCart2(btn) {
+    function addToCart(btn) {
       var productId = btn.getAttribute('data-product-id');
       var quantity = document.getElementById('quantity').value || 1;
 
@@ -160,7 +143,7 @@
       .then(data => {
         var buttons = document.querySelectorAll('*[data-product-id="'+productId+'"]');
         buttons.forEach(function(b) {
-            b.outerHTML = '<a href="/{{ $lang }}/market/cart" class="btn btn-dark btn-lg" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>';
+            b.outerHTML = '<a href="/{{ $lang }}/market/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>';
         });
 
         var countItemsM = document.getElementById('count-items-m');

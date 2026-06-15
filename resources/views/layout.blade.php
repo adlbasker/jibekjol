@@ -56,6 +56,10 @@
   @endif
 </head>
 <body class="bg-light pt-58">
+  <?php
+    $items = session('items');
+    $favorite = session('favorite');
+  ?>
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-brand-bg-brand-border bg-indigo bg-indigo-border" aria-label="Main navigation">
     <div class="container-xl">
       <a href="/{{ $lang }}/" class="navbar-brand p-0"><!-- JibekJol -->

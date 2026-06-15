@@ -70,6 +70,7 @@
           <th>Email</th>
           <th>Номер телефона</th>
           <th>Регион</th>
+          <th>ID Client</th>
           <th>Роль</th>
           <th class="text-end">Функции</th>
         </tr>
@@ -83,6 +84,7 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->tel }}</td>
             <td>{{ $user->region->title ?? '' }}</td>
+            <td><a href="/{{ $lang }}/admin/tracks/user/{{ $user->id }}">{{ $user->id_client ?? 'No ID' }}</a></td>
             <td>
               @foreach($user->roles as $role)
                 <span class="badge bg-secondary">{{ $role->name }}</span><br>

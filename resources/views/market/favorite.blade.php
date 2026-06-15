@@ -79,42 +79,59 @@
 @section('scripts')
   <script>
     // Add to cart
-    function addToCart(i) {
-      var productId = $(i).data("product-id");
+    function addToCart(btn) {
+      var productId = btn.getAttribute('data-product-id');
 
-      $.ajax({
-        type: "get",
-        url: '/add-to-cart/'+productId,
-        dataType: "json",
-        data: {},
-        success: function(data) {
-          $('*[data-product-id="'+productId+'"]').replaceWith('<a href="/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>');
-          $('#count-items-m').text(data.countItems);
-          $('#count-items').text(data.countItems);
-          alert('{{ __('Item added to cart') }}');
+      fetch('/{{ $lang }}/market/add-to-cart/' + productId, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
         }
-      });
+      })
+      .then(response => response.json())
+      .then(data => {
+        var buttons = document.querySelectorAll('*[data-product-id="'+productId+'"]');
+        buttons.forEach(function(b) {
+            b.outerHTML = '<a href="/{{ $lang }}/market/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>';
+        });
+
+        var countItemsM = document.getElementById('count-items-m');
+        if (countItemsM) countItemsM.textContent = data.countItems;
+        
+        var countItems = document.getElementById('count-items');
+        if (countItems) countItems.textContent = data.countItems;
+
+        alert('{{ __('Item added to cart') }}');
+      })
+      .catch(error => console.error('Error:', error));
     }
 
     // Toggle favourite
-    function toggleFavourite (f) {
-      var productId = $(f).data("favourite-id");
+    function toggleFavourite (btn) {
+      var productId = btn.getAttribute('data-favourite-id');
 
-      $.ajax({
-        type: "get",
-        url: '/toggle-favourite/'+productId,
-        dataType: "json",
-        data: {},
-        success: function(data) {
-          if (data.status == true) {
-            $('*[data-favourite-id="'+productId+'"]').addClass('btn-liked');
-          } else {
-            $('*[data-favourite-id="'+productId+'"]').removeClass('btn-liked');
-          }
-          $('#count-favorite-m').text(data.countFavorite);
-          $('#count-favorite').text(data.countFavorite);
+      fetch('/{{ $lang }}/market/toggle-favourite/' + productId, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
         }
-      });
+      })
+      .then(response => response.json())
+      .then(data => {
+        var buttons = document.querySelectorAll('*[data-favourite-id="'+productId+'"]');
+        if (data.status == true) {
+          buttons.forEach(function(b) { b.classList.add('btn-liked'); });
+        } else {
+          buttons.forEach(function(b) { b.classList.remove('btn-liked'); });
+        }
+        
+        var countFavoriteM = document.getElementById('count-favorite-m');
+        if (countFavoriteM) countFavoriteM.textContent = data.countFavorite;
+
+        var countFavorite = document.getElementById('count-favorite');
+        if (countFavorite) countFavorite.textContent = data.countFavorite;
+      })
+      .catch(error => console.error('Error:', error));
     }
   </script>
 @endsection

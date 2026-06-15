@@ -31,56 +31,7 @@ class CartController extends Controller
         return view('market.checkout', compact('items', 'regions', 'lang'));
     }
 
-    public function addToCart(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-        $productLang = $product->productsLang->firstWhere('lang', app()->getLocale());
-
-        if ($request->session()->has('items')) {
-
-            $items = $request->session()->get('items');
-
-            $quantity = (isset($request->quantity)) ? $request->quantity : 1;
-
-            $items['products_id'][$id] = [
-                'id' => $id, 'quantity' => $quantity, 'slug' => $productLang->slug, 'title' => $productLang->title, 'img_path' => $product->path.'/'.$product->image, 'price' => $product->price,
-            ];
-
-            if ($items['products_id'][$id]['quantity'] > $product->count) {
-                return response()->json(['status' => 'wrong']);
-            }
-
-            $request->session()->put('items', $items);
-            $count = count($items['products_id']);
-            $sum_price_items = 0;
-
-            foreach ($items['products_id'] as $item) {
-                $sum_price_item = $item['price'] * $item['quantity'];
-                $sum_price_items += $sum_price_item;
-            }
-
-            return response()->json([
-                'alert' => 'success', 'countItems' => $count, 'sumPriceItems' => $sum_price_items, 'quantity' => $request->quantity, 'slug' => $productLang->slug, 'title' => $productLang->title, 'img_path' => $product->path.'/'.$product->image, 'price' => $product->price,
-            ]);
-        }
-
-        $items = [];
-        $items['products_id'][$id] = [
-            'id' => $id, 'quantity' => 1, 'slug' => $productLang->slug, 'title' => $productLang->title, 'img_path' => $product->path.'/'.$product->image, 'price' => $product->price,
-        ];
-
-        if ($items['products_id'][$id]['quantity'] > $product->count) {
-            return response()->json(['status' => 'wrong']);
-        }
-
-        $request->session()->put('items', $items);
-
-        return response()->json([
-            'alert' => 'success', 'countItems' => 1, 'slug' => $productLang->slug, 'title' => $productLang->title, 'img_path' => $product->path.'/'.$product->image, 'price' => $product->price,
-        ]);
-    }
-
-    public function addToCart2(Request $request, $lang, $id)
+    public function addToCart(Request $request, $lang, $id)
     {
         $count = (int) $request->input('count', 1);
         $product = Product::findOrFail($id);

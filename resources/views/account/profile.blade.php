@@ -22,7 +22,13 @@
             <div class="col-9 cargo-data">
               <div>{{ Auth()->user()->id_client }}</div>
               <div>18149991335</div>
-              <div>广东省 佛山市 南海区 里水镇 里水镇洲村大管家仓储园E113号(7788仓库)</div>
+              <div>
+                广东省 佛山市 南海区 里水镇 里水镇洲村大管家仓储园E113号(7788仓库)
+                <?php
+                  $region = \App\Models\Region::find(Auth()->user()->region_id);
+                  echo '('.strtoupper($region->slug.'-'.Str::slug(Auth::user()->name)).'-'.substr(Auth()->user()->tel, -5).')';
+                ?>
+              </div>
             </div>
           </div>
           <button id="copy-data" class="btn btn-sm btn-outline-dark" type="button">

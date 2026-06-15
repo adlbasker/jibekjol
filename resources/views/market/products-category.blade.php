@@ -6,6 +6,7 @@
 
 @section('content')
 
+  <?php $items = session('items'); ?>
   <div class="py-3 border-bottom mb-3">
     <div class="container d-flex flex-wrap justify-content-between align-items-center">
       <h4 class="col-12 col-lg-4 mb-md-2 mb-lg-0">{{ $category->title }}</h4>
@@ -18,34 +19,34 @@
     <div class="row g-3">
       <div class="col-12 col-sm-12 col-md-12 col-lg-3">
 
-<div class="list-group d-none d-md-none d-lg-block">
-  <?php
-  $traverse = function ($nodes, $depth = 0) use (&$traverse, $lang) { ?>
-    <?php foreach ($nodes as $node) : ?>
-      <?php 
-        $paddingClass = $depth > 0 ? 'ps-' . ($depth + 2) . ' fw-normal text-muted' : 'fw-bold';
-      ?>
-      <a href="/{{ $lang }}/market/{{ $node->slug.'/'.$node->id }}" 
-         class="list-group-item list-group-item-action <?= $paddingClass ?>">
-         
-         <?php if ($depth > 0): ?>
-           &mdash; 
-         <?php endif; ?>
-         
-         {{ $node->title }}
-      </a>
-      
-      <?php if (count($node->children) > 0) {
-          $traverse($node->children, $depth + 1); 
-      } ?>
-    <?php endforeach; ?>
-  <?php }; ?>
-  
-  <?php $traverse($categories); ?>
-</div>
+        <div class="list-group d-none d-md-none d-lg-block">
+          <?php
+          $traverse = function ($nodes, $depth = 0) use (&$traverse, $lang) { ?>
+            <?php foreach ($nodes as $node) : ?>
+              <?php 
+                $paddingClass = $depth > 0 ? 'ps-' . ($depth + 2) . ' fw-normal text-muted' : 'fw-bold';
+              ?>
+              <a href="/{{ $lang }}/market/{{ $node->slug.'/'.$node->id }}" 
+                 class="list-group-item list-group-item-action <?= $paddingClass ?>">
+                 
+                 <?php if ($depth > 0): ?>
+                   &mdash; 
+                 <?php endif; ?>
+                 
+                 {{ $node->title }}
+              </a>
+              
+              <?php if (count($node->children) > 0) {
+                  $traverse($node->children, $depth + 1); 
+              } ?>
+            <?php endforeach; ?>
+          <?php }; ?>
+          
+          <?php $traverse($categories); ?>
+        </div>
 
         <div class="dropdown d-block d-md-block d-lg-none">
-          <div class="d-grid gap-2">
+          <div class="text-end">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Categories') }}</button>
             <ul class="dropdown-menu dropdown-menu-end" style="display: static;">
               <li><a class="dropdown-item" href="/{{ $lang }}/market">{{ __('All') }}</a></li>
@@ -75,9 +76,11 @@
               <div class="card-body">
                 <p class="card-text"><a href="/{{ $lang }}/market/{{ $product->id.'-'.$productLang->slug }}">{{ $productLang->title }}</a></p>
                 <div class="d-flex justify-content-between align-items-center">
-                  <!-- <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">{{ __('To cart') }}</button>
-                  </div> -->
+                  @if (is_array($items) AND isset($items[$product->id]))
+                    <a href="/{{ $lang }}/market/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>
+                  @else
+                    <!-- <button class="btn btn-primary" data-product-id="{{ $product->id }}" onclick="addToCart(this)">{{ __('Add to cart') }}</button> -->
+                  @endif
                   <small class="text-body-secondary">{{ $product->price }}〒</small>
                 </div>
               </div>
@@ -96,21 +99,31 @@
 @section('scripts')
   <script>
     // Add to cart
-    function addToCart(i) {
-      var productId = $(i).data("product-id");
+    function addToCart(btn) {
+      var productId = btn.getAttribute('data-product-id');
 
-      $.ajax({
-        type: "get",
-        url: '/add-to-cart/'+productId,
-        dataType: "json",
-        data: {},
-        success: function(data) {
-          $('*[data-product-id="'+productId+'"]').replaceWith('<a href="/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>');
-          $('#count-items-m').text(data.countItems);
-          $('#count-items').text(data.countItems);
-          alert('{{ __('Item added to cart') }}');
+      fetch('/{{ $lang }}/market/add-to-cart/' + productId, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
         }
-      });
+      })
+      .then(response => response.json())
+      .then(data => {
+        var buttons = document.querySelectorAll('*[data-product-id="'+productId+'"]');
+        buttons.forEach(function(b) {
+            b.outerHTML = '<a href="/{{ $lang }}/market/cart" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="{{ __('Go to cart') }}">{{ __('Checkout') }}</a>';
+        });
+
+        var countItemsM = document.getElementById('count-items-m');
+        if (countItemsM) countItemsM.textContent = data.countItems;
+        
+        var countItems = document.getElementById('count-items');
+        if (countItems) countItems.textContent = data.countItems;
+
+        alert('{{ __('Item added to cart') }}');
+      })
+      .catch(error => console.error('Error:', error));
     }
   </script>
 @endsection
